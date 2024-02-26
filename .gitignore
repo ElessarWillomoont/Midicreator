@@ -1,0 +1,12 @@
+.myenv/
+dataset/
+maestro/
+mmm_tokenizer_lmd_clean/
+wandb/
+output/
+model_output/
+*.pyc
+__pycache__/
+generated_music.mid
+input_music.mid
+output_music.mid
