@@ -36,16 +36,14 @@ def midi_to_bars_and_save(midi_file, dataset_dir, beats_per_bar=4):
         bars.append((notes_in_bar, bar_start, bar_end))
 
     # 使用tqdm创建进度条
-    for i in tqdm(range(0, len(bars) - 7, 4), desc="Processing bars"):
-        input_bars, input_start, input_end = zip(*bars[i:i+4])
-        target_bars, target_start, target_end = zip(*bars[i+4:i+8])
-        input_notes = [note for bar in input_bars for note in bar]
-        target_notes = [note for bar in target_bars for note in bar]
+    for i in tqdm(range(len(bars) - 1), desc="Processing bars"):  # 调整为-1以避免超出列表范围
+        input_notes, input_start, input_end = bars[i][0], bars[i][1], bars[i][2]
+        target_notes, target_start, target_end = bars[i + 1][0], bars[i + 1][1], bars[i + 1][2]
         base_name = os.path.splitext(os.path.basename(midi_file))[0]
-        input_file_name = f"{base_name}_input_{i//4}.midi"
-        target_file_name = f"{base_name}_target_{i//4}.midi"
-        save_bar_as_midi(input_notes, input_start[0], input_end[-1], os.path.join(dataset_dir, input_file_name))
-        save_bar_as_midi(target_notes, target_start[0], target_end[-1], os.path.join(dataset_dir, target_file_name))
+        input_file_name = f"{base_name}_input_{i}.midi"
+        target_file_name = f"{base_name}_target_{i}.midi"
+        save_bar_as_midi(input_notes, input_start, input_end, os.path.join(dataset_dir, input_file_name))
+        save_bar_as_midi(target_notes, target_start, target_end, os.path.join(dataset_dir, target_file_name))
 
 def process_midi_directory_and_save(midi_dir, dataset_dir):
     if not os.path.exists(dataset_dir):
