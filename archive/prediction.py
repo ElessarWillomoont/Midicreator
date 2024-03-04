@@ -1,7 +1,7 @@
 import numpy as np
 
 # 已知的令牌数量
-TOKEN_SIZE = 22346648
+TOKEN_SIZE = 358818
 
 # 线性回归模型的斜率和截距
 m = 0.9606135203483412
