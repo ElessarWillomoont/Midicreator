@@ -7,10 +7,10 @@ tokenizer_path = Path('tokenizer/tokenizer.json')  # tokenizer参数文件的路
 tokenizer = REMI(params=tokenizer_path)  # 使用参数路径初始化tokenizer
 
 # 模型配置参数
-n_layer=9
+n_layer=6
 n_head=4
-n_emb=16
-context_length = 1024
+n_emb=32
+context_length = 256
 vocab_size = 30000  # 根据你的tokenizer实际情况调整
 pad_token_id = 0  # 假设你的pad_token_id是0，根据实际情况调整
 

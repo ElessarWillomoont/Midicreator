@@ -10,6 +10,7 @@ from miditoolkit import MidiFile
 from miditok import REMI, MIDITokenizer
 from tqdm import tqdm
 from model_transformer import GPT2LikeTransformer  # 确保这个路径正确
+from torch.nn.utils.rnn import pad_sequence
 
 # 加载tokenizer
 tokenizer_path = Path('tokenizer/tokenizer.json')
@@ -66,24 +67,43 @@ class MIDIDataset(Dataset):
     def __getitem__(self, idx):
         return process_midi_pair(self.pairs[idx])
 
+# 自定义collate_fn函数
+from torch.nn.utils.rnn import pad_sequence
+
+def collate_fn(batch):
+    input_ids, targets = zip(*batch)
+    max_length = 256  # Define your maximum sequence length here
+
+    # Ensure all sequences are truncated to the same length
+    input_ids_truncated = [seq[:max_length] for seq in input_ids]
+    targets_truncated = [seq[:max_length] for seq in targets]
+
+    # Pad sequences
+    input_ids_padded = pad_sequence(input_ids_truncated, batch_first=True, padding_value=0)
+    targets_padded = pad_sequence(targets_truncated, batch_first=True, padding_value=0)
+
+    return input_ids_padded, targets_padded
+
+
+
 # 损失函数
 def compute_loss(outputs, targets):
-    loss_fn = nn.CrossEntropyLoss()
+    loss_fn = nn.CrossEntropyLoss(ignore_index=0)  # 假设0是填充令牌的索引
     return loss_fn(outputs.view(-1, outputs.size(-1)), targets.view(-1))
 
 # 初始化模型和优化器
-model = GPT2LikeTransformer(vocab_size=30000, n_layer=6, n_head=8, n_emb=512, context_length=1024, pad_token_id=0)
+model = GPT2LikeTransformer(vocab_size=30000, n_layer=6, n_head=4, n_emb=16, context_length=256, pad_token_id=0)
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # 创建DataLoader
 train_dataset = MIDIDataset(train_pairs)
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, collate_fn=collate_fn)
 
 # 训练循环
 model.train()
-num_epochs = 10
+num_epochs = 3
 for epoch in range(num_epochs):
-    for input_ids, targets in train_loader:
+    for input_ids, targets in tqdm(train_loader):
         optimizer.zero_grad()
         outputs = model(input_ids)
         loss = compute_loss(outputs, targets)
