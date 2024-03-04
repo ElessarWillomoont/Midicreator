@@ -35,8 +35,7 @@ def midi_to_bars_and_save(midi_file, dataset_dir, beats_per_bar=4):
                     notes_in_bar.append(note)
         bars.append((notes_in_bar, bar_start, bar_end))
 
-    # 使用tqdm创建进度条
-    for i in tqdm(range(len(bars) - 1), desc="Processing bars"):  # 调整为-1以避免超出列表范围
+    for i in tqdm(range(len(bars) - 1), desc="Processing bars"):  # 保留进度条
         input_notes, input_start, input_end = bars[i][0], bars[i][1], bars[i][2]
         target_notes, target_start, target_end = bars[i + 1][0], bars[i + 1][1], bars[i + 1][2]
         base_name = os.path.splitext(os.path.basename(midi_file))[0]
@@ -49,12 +48,16 @@ def process_midi_directory_and_save(midi_dir, dataset_dir):
     if not os.path.exists(dataset_dir):
         os.makedirs(dataset_dir)
 
-    midi_files = [f for root, _, files in os.walk(midi_dir) for f in files if f.lower().endswith(('.midi', '.mid'))]
+    midi_files = []  # 初始化一个空列表来存储MIDI文件路径
+    for root, _, files in os.walk(midi_dir):
+        for file in files:
+            if file.lower().endswith(('.midi', '.mid')):
+                midi_files.append(os.path.join(root, file))  # 使用root构造完整的文件路径
+
     # 将整个文件处理过程放入tqdm进度条中
     for file in tqdm(midi_files, desc="Processing MIDI files"):
-        midi_path = os.path.join(midi_dir, file)
-        midi_to_bars_and_save(midi_path, dataset_dir)
+        midi_to_bars_and_save(file, dataset_dir)
 
-midi_dir = 'maestro'  # Your MIDI files directory
-dataset_dir = 'dataset'  # Directory to save the training pairs
+midi_dir = 'maestro'  # 您的MIDI文件目录
+dataset_dir = 'dataset'  # 用于保存训练对的目录
 process_midi_directory_and_save(midi_dir, dataset_dir)
