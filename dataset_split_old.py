@@ -35,14 +35,14 @@ def midi_to_bars_and_save(midi_file, dataset_dir, beats_per_bar=4):
                     notes_in_bar.append(note)
         bars.append((notes_in_bar, bar_start, bar_end))
 
-    splited_dir = os.path.join(dataset_dir, 'splited')  # 指定保存切分MIDI的目录
-    if not os.path.exists(splited_dir):
-        os.makedirs(splited_dir)
-
-    for i, (notes_in_bar, bar_start, bar_end) in enumerate(tqdm(bars, desc="Processing bars")):
+    for i in tqdm(range(len(bars) - 1), desc="Processing bars"):  # 保留进度条
+        input_notes, input_start, input_end = bars[i][0], bars[i][1], bars[i][2]
+        target_notes, target_start, target_end = bars[i + 1][0], bars[i + 1][1], bars[i + 1][2]
         base_name = os.path.splitext(os.path.basename(midi_file))[0]
-        file_name = f"{base_name}_bar_{i}.midi"
-        save_bar_as_midi(notes_in_bar, bar_start, bar_end, os.path.join(splited_dir, file_name))
+        input_file_name = f"{base_name}_input_{i}.midi"
+        target_file_name = f"{base_name}_target_{i}.midi"
+        save_bar_as_midi(input_notes, input_start, input_end, os.path.join(dataset_dir, input_file_name))
+        save_bar_as_midi(target_notes, target_start, target_end, os.path.join(dataset_dir, target_file_name))
 
 def process_midi_directory_and_save(midi_dir, dataset_dir):
     if not os.path.exists(dataset_dir):
@@ -59,5 +59,5 @@ def process_midi_directory_and_save(midi_dir, dataset_dir):
         midi_to_bars_and_save(file, dataset_dir)
 
 midi_dir = 'maestro'  # 您的MIDI文件目录
-dataset_dir = 'dataset'  # 用于保存切分后的MIDI文件的目录
+dataset_dir = 'dataset'  # 用于保存训练对的目录
 process_midi_directory_and_save(midi_dir, dataset_dir)
