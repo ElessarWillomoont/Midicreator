@@ -19,7 +19,7 @@ def calculate_total_tokens(dataset_path, tokenizer):
                 midi_data = MidiFile(midi_path)  # 使用 miditoolkit 的 MidiFile 加载 MIDI
                 
                 # 将 MIDI 数据转换为 tokens
-                tokens = tokenizer.encode(midi_data)  # 使用 encode 方法
+                tokens = tokenizer(midi_data)  # 曾经使用 encode 方法
                 
                 # 累加 token 数量
                 total_tokens += len(tokens)  # tokens 现在是一个直接的列表
