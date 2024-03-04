@@ -11,7 +11,7 @@ tokenizer_path = Path('tokenizer/tokenizer.json')
 tokenizer = REMI(params=tokenizer_path)
 
 # 设定数据集的路径
-dataset_path = 'maestro'
+dataset_path = 'dataset'
 
 # 计算数据集的总token数量，包括子目录中的文件
 def calculate_total_tokens(dataset_path, tokenizer):
