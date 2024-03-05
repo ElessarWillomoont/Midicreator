@@ -12,7 +12,7 @@ def load_midi(midi_path):
 def split_midi(midi, max_nb_bar=4):
     """将MIDI文件切分为多个片段，每个片段为一小节"""
     splits = []
-    ticks_per_cut = max_nb_bar * midi.ticks_per_beat * 1
+    ticks_per_cut = max_nb_bar * midi.ticks_per_beat * 4
     nb_cuts = ceil(midi.max_tick / ticks_per_cut)
 
     for i in range(nb_cuts):
@@ -61,7 +61,7 @@ token_dir.mkdir(parents=True, exist_ok=True)
 dataset_dir.mkdir(parents=True, exist_ok=True)
 
 # Process each MIDI file
-for midi_file_path in input_dir.glob("*.midi"):
+for midi_file_path in input_dir.rglob("*.midi"):
     midi = load_midi(midi_file_path)
     midi_splits = split_midi(midi)
 
