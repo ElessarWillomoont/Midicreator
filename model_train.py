@@ -72,17 +72,18 @@ from torch.nn.utils.rnn import pad_sequence
 
 def collate_fn(batch):
     input_ids, targets = zip(*batch)
-    max_length = 256  # Define your maximum sequence length here
+    max_length = 256  # 定义最大序列长度
 
-    # Ensure all sequences are truncated to the same length
-    input_ids_truncated = [seq[:max_length] for seq in input_ids]
-    targets_truncated = [seq[:max_length] for seq in targets]
+    # 将序列转换为Tensor对象，并确保所有序列都被截断到max_length
+    input_ids_truncated = [torch.tensor(seq[:max_length], dtype=torch.long) for seq in input_ids]
+    targets_truncated = [torch.tensor(seq[:max_length], dtype=torch.long) for seq in targets]
 
-    # Pad sequences
+    # 对截断的序列进行填充
     input_ids_padded = pad_sequence(input_ids_truncated, batch_first=True, padding_value=0)
     targets_padded = pad_sequence(targets_truncated, batch_first=True, padding_value=0)
 
     return input_ids_padded, targets_padded
+
 
 
 
