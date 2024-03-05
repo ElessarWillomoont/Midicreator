@@ -1,7 +1,7 @@
 # train_model.py
 import torch
 from model_transformer import TransformerModel  # 假设你的模型定义在这个文件中
-from models.data_loader import get_data_loader
+from models.data_loder import get_data_loader
 
 def train_model(train_data_loader, validation_data_loader, model, epochs=1):
     optimizer = torch.optim.Adam(model.parameters())

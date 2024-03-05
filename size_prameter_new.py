@@ -1,5 +1,5 @@
 from pathlib import Path
-from model_transformer import GPT2LikeTransformer  # 导入你自定义的模型类
+from models.model_transformer import GPT2LikeTransformer  # 导入你自定义的模型类
 from miditok import REMI  # 导入你训练tokenizer所使用的库
 
 # 初始化并加载你的tokenizer

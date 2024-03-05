@@ -1,4 +1,4 @@
-myenv/
+.myenv/
 dataset/
 maestro/
 mmm_tokenizer_lmd_clean/

@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 from torch.nn import TransformerEncoder, TransformerEncoderLayer
 
-class GPT2LikeTransformer(nn.Module):
+class TransformerModel(nn.Module):
     def __init__(self, vocab_size, n_layer, n_head, n_emb, context_length, pad_token_id):
-        super(GPT2LikeTransformer, self).__init__()
+        super(TransformerModel, self).__init__()
 
         self.n_layer = n_layer
         self.n_head = n_head

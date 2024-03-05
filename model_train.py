@@ -7,7 +7,7 @@ import torch.optim as optim
 import torch
 import torch.nn as nn
 from tqdm import tqdm
-from model_transformer import GPT2LikeTransformer  # 确保这个路径正确
+from models.model_transformer import GPT2LikeTransformer  # 确保这个路径正确
 from torch.nn.utils.rnn import pad_sequence
 
 # 数据集目录
