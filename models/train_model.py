@@ -12,6 +12,8 @@ def train_model(train_data_loader, validation_data_loader, model, epochs=1):
         for input_ids, target_ids in train_data_loader:
             optimizer.zero_grad()
             output = model(input_ids)
+            print(output.shape, target_ids.shape)
+            #input("give something")
             loss = loss_fn(output, target_ids)
             loss.backward()
             optimizer.step()

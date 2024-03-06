@@ -2,15 +2,18 @@ import torch
 import torch.nn as nn
 
 class TransformerModel(nn.Module):
-    def __init__(self, vocab_size, n_layer, n_head, n_emb, context_length, pad_token_id):
+    def __init__(self, vocab_size, n_layer, n_head, n_emb, context_length, pad_token_id, use_decoder=False):
         super(TransformerModel, self).__init__()
 
         self.pad_token_id = pad_token_id
+        self.use_decoder = use_decoder  # Flag to toggle decoder usage
 
         # Token embedding layer
         self.token_embeddings = nn.Embedding(vocab_size, n_emb)
-        # Positional encoding layer
-        self.position_embeddings = nn.Embedding(context_length, n_emb)
+        # Positional encoding layer for encoder
+        self.position_embeddings_enc = nn.Embedding(context_length, n_emb)
+        # Optionally, Positional encoding layer for decoder (if different from encoder)
+        self.position_embeddings_dec = nn.Embedding(context_length, n_emb) if use_decoder else None
         # Dropout layer
         self.dropout = nn.Dropout(0.1)
 
@@ -19,10 +22,10 @@ class TransformerModel(nn.Module):
             d_model=n_emb, 
             nhead=n_head, 
             num_encoder_layers=n_layer, 
-            num_decoder_layers=0,  # 不使用解码器层
+            num_decoder_layers=n_layer if use_decoder else 0,  # Enable decoder layers if use_decoder is True
             dim_feedforward=4 * n_emb, 
             dropout=0.1,
-            batch_first=True  # 启用 batch_first
+            batch_first=True  # Enable batch_first
         )
 
         # Final layer normalization
@@ -31,36 +34,47 @@ class TransformerModel(nn.Module):
         # Output head to generate logits for next token prediction
         self.head = nn.Linear(n_emb, vocab_size, bias=False)
 
-    def forward(self, input_ids, mask=None):
-        # Create position ids (0 to context_length - 1) and add token embeddings
-        position_ids = torch.arange(0, input_ids.size(1), dtype=torch.long, device=input_ids.device)
-        position_ids = position_ids.unsqueeze(0).expand_as(input_ids)
+    def forward(self, input_ids, src_mask=None):
+        # Generate position IDs for encoder
+        position_ids_enc = torch.arange(0, input_ids.size(1), dtype=torch.long, device=input_ids.device)
+        position_ids_enc = position_ids_enc.unsqueeze(0).expand_as(input_ids)
 
-        # Retrieve token and position embeddings
-        token_embeddings = self.token_embeddings(input_ids)
-        position_embeddings = self.position_embeddings(position_ids)
+        # Obtain token embeddings from the token_embeddings layer
+        token_embeddings_enc = self.token_embeddings(input_ids)
+        # Generate position embeddings for encoder
+        position_embeddings_enc = self.position_embeddings_enc(position_ids_enc)
 
-        # Sum token and position embeddings
-        embeddings = token_embeddings + position_embeddings
-        embeddings = self.dropout(embeddings)
+        # Sum token and position embeddings for encoder
+        embeddings_enc = token_embeddings_enc + position_embeddings_enc
+        embeddings_enc = self.dropout(embeddings_enc)
 
-        # Prepare attention mask
-        if mask is None:
-            mask = input_ids == self.pad_token_id
-        # Convert mask to expected format for nn.Transformer
-        mask = mask.unsqueeze(1).unsqueeze(2)
-        mask = (1.0 - mask.float()) * -10000.0  # Convert to float mask
+        # Prepare encoder attention mask
+        if src_mask is None:
+            src_mask = input_ids == self.pad_token_id
 
-        # Transformer encoder
-        transformer_output = self.transformer(
-            src=embeddings, 
-            src_key_padding_mask=mask
-        )
+        if self.use_decoder:
+            # Create a dummy target tensor for decoder
+            dummy_tgt = torch.zeros_like(embeddings_enc)
+            # Transformer encoder-decoder
+            transformer_output = self.transformer(
+                src=embeddings_enc, 
+                tgt=dummy_tgt,  # Include dummy target tensor
+                src_key_padding_mask=src_mask  # Correctly pass the src_mask without additional modifications
+            )
+        else:
+            # Transformer encoder only
+            transformer_output = self.transformer.encoder(
+                src=embeddings_enc,
+                src_key_padding_mask=src_mask
+            )
 
-        # Final layer normalization
+        # Final layer normalization and output logits remain unchanged
         transformer_output = self.ln_f(transformer_output)
+        output, _ = torch.max(transformer_output, dim=2)
+    
+        return output
 
-        # Output logits
-        logits = self.head(transformer_output)
+    def _generate_square_subsequent_mask(self, sz):
+        """Generates an upper-triangular matrix of -inf, with zeros on diag."""
+        return torch.triu(torch.ones(sz, sz) * float('-inf'), diagonal=1)
 
-        return logits

@@ -3,7 +3,7 @@ import torch.nn as nn
 from torch.nn import TransformerEncoder, TransformerEncoderLayer
 
 
-class TransformerModel(nn.Module):
+class GPTLIKEtransformer(nn.Module):
     def __init__(self, vocab_size, n_layer, n_head, n_emb, context_length, pad_token_id):
         super(TransformerModel, self).__init__()
 
