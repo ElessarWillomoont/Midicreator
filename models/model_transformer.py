@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 class TransformerModel(nn.Module):
-    def __init__(self, vocab_size, n_layer, n_head, n_emb, context_length, pad_token_id, use_decoder=False):
+    def __init__(self, vocab_size, n_layer, n_head, n_emb, context_length, pad_token_id, use_decoder=True):
         super(TransformerModel, self).__init__()
 
         self.pad_token_id = pad_token_id
@@ -70,9 +70,12 @@ class TransformerModel(nn.Module):
 
         # Final layer normalization and output logits remain unchanged
         transformer_output = self.ln_f(transformer_output)
-        output, _ = torch.max(transformer_output, dim=2)
-    
-        return output
+        logits = self.head(transformer_output)
+
+    # Use torch.argmax to select the most likely token ID from logits
+        #predicted_token_ids = torch.argmax(logits, dim=-1)
+
+        return logits
 
     def _generate_square_subsequent_mask(self, sz):
         """Generates an upper-triangular matrix of -inf, with zeros on diag."""

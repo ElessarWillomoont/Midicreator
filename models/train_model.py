@@ -12,8 +12,7 @@ def train_model(train_data_loader, validation_data_loader, model, epochs=1):
         for input_ids, target_ids in train_data_loader:
             optimizer.zero_grad()
             output = model(input_ids)
-            print(output.shape, target_ids.shape)
-            #input("give something")
+            output = output.permute(0, 2, 1)
             loss = loss_fn(output, target_ids)
             loss.backward()
             optimizer.step()
@@ -33,7 +32,7 @@ train_data_loader = get_data_loader('dataset/train_data.json')
 validation_data_loader = get_data_loader('dataset/validation_data.json')
 
 # 初始化模型
-model = TransformerModel(vocab_size=30000, n_layer=6, n_head=4, n_emb=16, context_length=256, pad_token_id=0)  # 假设你的模型构造函数不需要任何参数
+model = TransformerModel(vocab_size=30000, n_layer=3, n_head=4, n_emb=16, context_length=256, pad_token_id=0)  # 假设你的模型构造函数不需要任何参数
 
 # 训练模型
 train_model(train_data_loader, validation_data_loader, model)
