@@ -9,30 +9,23 @@ def train_model(train_data_loader, validation_data_loader, model, epochs=1):
 
     for epoch in range(epochs):
         model.train()
-        for epoch in range(epochs):
-            model.train()
-            for input_ids, target_ids in train_data_loader:
-                input_ids = input_ids.to(device)  # Move input_ids to GPU
-                target_ids = target_ids.to(device)  # Move target_ids to GPU
-                optimizer.zero_grad()
-                output = model(input_ids)
-                output = output.permute(0, 2, 1)
-                loss = loss_fn(output, target_ids)
-                loss.backward()
-                optimizer.step()
+        for input_ids, target_ids in train_data_loader:
+            optimizer.zero_grad()
+            output = model(input_ids)
+            output = output.permute(0, 2, 1)
+            loss = loss_fn(output, target_ids)
+            loss.backward()
+            optimizer.step()
             output = output.permute(0, 2, 1)
         # 简化的验证过程
         model.eval()
         with torch.no_grad():
             total_loss = 0
             for input_ids, target_ids in validation_data_loader:
-                input_ids = input_ids.to(device)  # Move input_ids to GPU
-                target_ids = target_ids.to(device)  # Move target_ids to GPU
                 output = model(input_ids)
                 loss = loss_fn(output, target_ids)
                 total_loss += loss.item()
             print(f'Epoch {epoch}, Validation Loss: {total_loss / len(validation_data_loader)}')
-
 
 # 加载数据
 train_data_loader = get_data_loader('dataset/train_data.json')
