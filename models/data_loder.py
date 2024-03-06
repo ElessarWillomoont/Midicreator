@@ -15,6 +15,6 @@ class MusicDataset(Dataset):
         input_ids, target_ids = self.data_pairs[idx]
         return torch.tensor(input_ids), torch.tensor(target_ids)
 
-def get_data_loader(data_file, batch_size=32):
+def get_data_loader(data_file, batch_size=96):
     dataset = MusicDataset(data_file)
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
