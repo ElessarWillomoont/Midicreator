@@ -16,7 +16,7 @@ def train_model(train_data_loader, validation_data_loader, model, epochs=1):
             loss = loss_fn(output, target_ids)
             loss.backward()
             optimizer.step()
-        
+            output = output.permute(0, 2, 1)
         # 简化的验证过程
         model.eval()
         with torch.no_grad():
