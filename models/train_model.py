@@ -3,17 +3,35 @@ import torch
 from model_transformer import TransformerModel  # 假设你的模型定义在这个文件中
 from data_loder import get_data_loader
 from tqdm import tqdm
+import os
+import glob
 import wandb
 import time
 
 PROJECT_NAME = 'Midicreator'
 ENTITY_NAME = 'candle2587_team'
 
+# Ensure checkpoint directory exists
+checkpoint_dir = "model_output/checkpoints"
+os.makedirs(checkpoint_dir, exist_ok=True)
+
 def train_model(device, train_data_loader, validation_data_loader, model, epochs=1):
     optimizer = torch.optim.Adam(model.parameters())
     loss_fn = torch.nn.CrossEntropyLoss()
 
-    for epoch in tqdm(range(epochs), desc="Epochs Progress"):  # Track progress of epochs
+    # Load the latest checkpoint
+    checkpoint_files = glob.glob(os.path.join(checkpoint_dir, "*.pt"))
+    if checkpoint_files:
+        latest_checkpoint = max(checkpoint_files, key=os.path.getctime)
+        checkpoint = torch.load(latest_checkpoint)
+        model.load_state_dict(checkpoint['model_state_dict'])
+        optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+        start_epoch = checkpoint['epoch'] + 1
+        print(f"Loaded checkpoint from {latest_checkpoint}")
+    else:
+        start_epoch = 0
+
+    for epoch in tqdm(range(start_epoch, epochs), desc="Epochs Progress"):
         epoch_start_time = time.time()
         model.train()
         total_train_loss = 0
@@ -57,6 +75,16 @@ def train_model(device, train_data_loader, validation_data_loader, model, epochs
         total_duration = epoch_end_time - total_start_time
         print(f'Epoch {epoch} completed in {epoch_duration:.2f} seconds.')
         print(f'Total training time up to now: {total_duration:.2f} seconds.')
+        # Save checkpoint every 10 epochs
+        if (epoch + 1) % 10 == 0:
+            checkpoint_path = os.path.join(checkpoint_dir, f"epoch_{epoch+1}.pt")
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': avg_val_loss,
+            }, checkpoint_path)
+            print(f"Checkpoint saved at {checkpoint_path}")
 #Wandb
 wandb.init(project=PROJECT_NAME, entity=ENTITY_NAME)
 
