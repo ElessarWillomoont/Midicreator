@@ -10,12 +10,13 @@ import time
 
 PROJECT_NAME = 'Midicreator'
 ENTITY_NAME = 'candle2587_team'
+EPOCH_NUM = 150
 
 # Ensure checkpoint directory exists
 checkpoint_dir = "model_output/checkpoints"
 os.makedirs(checkpoint_dir, exist_ok=True)
 
-def train_model(device, train_data_loader, validation_data_loader, model, epochs=1):
+def train_model(device, train_data_loader, validation_data_loader, model, epochs=EPOCH_NUM):
     optimizer = torch.optim.Adam(model.parameters())
     loss_fn = torch.nn.CrossEntropyLoss()
 
