@@ -33,14 +33,6 @@ class TransformerModel(nn.Module):
 
         # Output head to generate logits for next token prediction
         self.head = nn.Linear(n_emb, vocab_size, bias=False)
-        
-        # List to store intermediate outputs
-        self.intermediate_outputs = []
-
-        # Register hooks for each layer
-        for layer in self.transformer.modules():
-            if isinstance(layer, nn.MultiheadAttention):
-                self.register_forward_hook(layer)
 
     def forward(self, input_ids, src_mask=None):
         # Generate position IDs for encoder
@@ -75,19 +67,17 @@ class TransformerModel(nn.Module):
                 src=embeddings_enc,
                 src_key_padding_mask=src_mask
             )
-        
-        # Final layer normalization
+
+        # Final layer normalization and output logits remain unchanged
         transformer_output = self.ln_f(transformer_output)
         logits = self.head(transformer_output)
 
-        return logits, self.intermediate_outputs
+    # Use torch.argmax to select the most likely token ID from logits
+        predicted_token_ids = torch.argmax(logits, dim=-1)
 
-    def register_forward_hook(self, layer):
-        """Register hook to store intermediate outputs."""
-        def hook(module, input, output):
-            self.intermediate_outputs.append(output.detach().cpu().numpy())
-        layer.register_forward_hook(hook)
+        return predicted_token_ids
 
     def _generate_square_subsequent_mask(self, sz):
         """Generates an upper-triangular matrix of -inf, with zeros on diag."""
         return torch.triu(torch.ones(sz, sz) * float('-inf'), diagonal=1)
+
