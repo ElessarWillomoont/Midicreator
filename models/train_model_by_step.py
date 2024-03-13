@@ -102,7 +102,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 total_start_time = time.time()
 
 # 初始化模型
-model = TransformerModel(vocab_size=30000, n_layer=3, n_head=4, n_emb=16, context_length=256, pad_token_id=0)  # 假设你的模型构造函数不需要任何参数
+model = TransformerModel(vocab_size=30000, n_layer=3, n_head=4, n_emb=16, context_length=128, pad_token_id=0)  # 假设你的模型构造函数不需要任何参数
 model.to(device)
 wandb.watch(model, log='all')
 # 训练模型

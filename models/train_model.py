@@ -10,7 +10,7 @@ import time
 
 PROJECT_NAME = 'Midicreator'
 ENTITY_NAME = 'candle2587_team'
-EPOCH_NUM = 1000
+EPOCH_NUM = 100
 
 # Ensure checkpoint directory exists
 checkpoint_dir = "model_output/checkpoints"
