@@ -98,13 +98,16 @@ def train_model(device, train_data_loader, validation_data_loader, model, epochs
 #wandb.init(project=PROJECT_NAME, entity=ENTITY_NAME)
 
 # 加载数据
-train_data_loader = get_data_loader('dataset/train_data.json',BATCH_SIZE,LOAD_DATA_THREAD)
-validation_data_loader = get_data_loader('dataset/validation_data.json',BATCH_SIZE,LOAD_DATA_THREAD)
+train_data_pattern = 'dataset/train_data_*.json'  # 匹配所有训练数据文件
+validation_data_pattern = 'dataset/validation_data_*.json'  # 匹配所有验证数据文件
+
+train_data_loader = get_data_loader(train_data_pattern, BATCH_SIZE, LOAD_DATA_THREAD)
+validation_data_loader = get_data_loader(validation_data_pattern, BATCH_SIZE, LOAD_DATA_THREAD)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 total_start_time = time.time()
 
 # 初始化模型
-model = TransformerModel(vocab_size=30000, n_layer=3, n_head=4, n_emb=16, context_length=64, pad_token_id=0)  # context_length=256
+model = TransformerModel(vocab_size=30000, n_layer=3, n_head=4, n_emb=16, context_length=32, pad_token_id=0)  # context_length=256
 model.to(device)
 #wandb.watch(model, log='all')
 # 训练模型
