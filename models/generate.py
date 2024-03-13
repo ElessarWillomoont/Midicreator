@@ -2,7 +2,7 @@ import torch
 from model_test import TransformerModel
 import torch.nn.functional as F
 
-CHECK_POINT = "model_output/checkpoints/epoch_80_lowest.pt"
+CHECK_POINT = "model_output/checkpoints/epoch_350.pt"
 
 model = TransformerModel(vocab_size=30000, n_layer=3, n_head=4, n_emb=16, context_length=256, pad_token_id=0)
 checkpoint = torch.load(CHECK_POINT)

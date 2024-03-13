@@ -75,7 +75,7 @@ class TransformerModel(nn.Module):
     # Use torch.argmax to select the most likely token ID from logits
         predicted_token_ids = torch.argmax(logits, dim=-1)
 
-        return predicted_token_ids
+        return logits
 
     def _generate_square_subsequent_mask(self, sz):
         """Generates an upper-triangular matrix of -inf, with zeros on diag."""
