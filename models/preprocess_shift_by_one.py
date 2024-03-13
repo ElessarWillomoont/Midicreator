@@ -2,7 +2,7 @@ import json
 import os
 from tqdm import tqdm
 
-MAX_LENGTH = 32  # Global variable for maximum length
+MAX_LENGTH = 8  # Global variable for maximum length
 FILE_SIZE = 500 * 1024 * 1024  # 500MB in bytes
 
 def preprocess_data(input_dir, prefix, batch_size=8):

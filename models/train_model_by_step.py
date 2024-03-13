@@ -10,9 +10,9 @@ import time
 
 PROJECT_NAME = 'Midicreator'
 ENTITY_NAME = 'candle2587_team'
-EPOCH_NUM = 100
-STEP_SIZE = 5000  # 每多少步进行一次检查和存储检查点
-BATCH_SIZE = 768
+EPOCH_NUM = 200
+STEP_SIZE = 20000  # 每多少步进行一次检查和存储检查点
+BATCH_SIZE = 3500
 LOAD_DATA_THREAD = 2
 
 # Ensure checkpoint directory exists
@@ -88,6 +88,7 @@ def train_model(device, train_data_loader, validation_data_loader, model, epochs
         wandb.log({"avg_validation_loss": avg_val_loss})
 
         print(f'Epoch {epoch}, Training Loss: {avg_train_loss:.4f}')
+        print(f'Epoch {epoch}, Validation Loss: {avg_val_loss:.4f}')
         epoch_end_time = time.time()
         epoch_duration = epoch_end_time - epoch_start_time
         total_duration = epoch_end_time - total_start_time
@@ -107,7 +108,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 total_start_time = time.time()
 
 # 初始化模型
-model = TransformerModel(vocab_size=30000, n_layer=3, n_head=4, n_emb=8, context_length=32, pad_token_id=0)  # context_length=256
+model = TransformerModel(vocab_size=30000, n_layer=3, n_head=4, n_emb=8, context_length=8, pad_token_id=0)  # context_length=256
 model.to(device)
 wandb.watch(model, log='all')
 # 训练模型
