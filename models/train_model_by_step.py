@@ -10,8 +10,10 @@ import time
 
 PROJECT_NAME = 'Midicreator'
 ENTITY_NAME = 'candle2587_team'
-EPOCH_NUM = 1000
+EPOCH_NUM = 1
 STEP_SIZE = 100  # 每多少步进行一次检查和存储检查点
+BATCH_SIZE = 96
+LOAD_DATA_THREAD = 2
 
 # Ensure checkpoint directory exists
 checkpoint_dir = "model_output/checkpoints"
@@ -66,7 +68,7 @@ def train_model(device, train_data_loader, validation_data_loader, model, epochs
                 }, checkpoint_path)
                 print(f"Checkpoint saved at {checkpoint_path}")
         avg_train_loss = total_train_loss / len(train_data_loader)
-        wandb.log({"avg_train_loss": avg_train_loss, "global_step": global_step})
+        #wandb.log({"avg_train_loss": avg_train_loss, "global_step": global_step})
         
 
         # Validation process with tqdm progress bar
@@ -83,7 +85,7 @@ def train_model(device, train_data_loader, validation_data_loader, model, epochs
                 total_val_loss += loss.item()
                 #wandb.log({"validation loss": loss.item()})
         avg_val_loss = total_val_loss / len(validation_data_loader)
-        wandb.log({"avg_validation_loss": avg_val_loss})
+        #wandb.log({"avg_validation_loss": avg_val_loss})
 
         print(f'Epoch {epoch}, Training Loss: {avg_train_loss:.4f}')
         epoch_end_time = time.time()
@@ -93,18 +95,18 @@ def train_model(device, train_data_loader, validation_data_loader, model, epochs
         print(f'Total training time up to now: {total_duration:.2f} seconds.')
 
 #Wandb
-wandb.init(project=PROJECT_NAME, entity=ENTITY_NAME)
+#wandb.init(project=PROJECT_NAME, entity=ENTITY_NAME)
 
 # 加载数据
-train_data_loader = get_data_loader('dataset/train_data.json')
-validation_data_loader = get_data_loader('dataset/validation_data.json')
+train_data_loader = get_data_loader('dataset/train_data.json',BATCH_SIZE,LOAD_DATA_THREAD)
+validation_data_loader = get_data_loader('dataset/validation_data.json',BATCH_SIZE,LOAD_DATA_THREAD)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 total_start_time = time.time()
 
 # 初始化模型
-model = TransformerModel(vocab_size=30000, n_layer=3, n_head=4, n_emb=16, context_length=128, pad_token_id=0)  # 假设你的模型构造函数不需要任何参数
+model = TransformerModel(vocab_size=30000, n_layer=3, n_head=4, n_emb=16, context_length=64, pad_token_id=0)  # context_length=256
 model.to(device)
-wandb.watch(model, log='all')
+#wandb.watch(model, log='all')
 # 训练模型
 train_model(device ,train_data_loader, validation_data_loader, model)
-wandb.finish()
+#wandb.finish()

@@ -2,7 +2,7 @@ import json
 import os
 from tqdm import tqdm
 
-MAX_LENGTH = 128  # Global variable for maximum length
+MAX_LENGTH = 64  # Global variable for maximum length
 
 def preprocess_data(input_dir, output_file, batch_size=8):
     all_files = [os.path.join(subdir, file) for subdir, _, files in os.walk(input_dir) for file in files if file.endswith('.json')]
