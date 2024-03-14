@@ -11,7 +11,7 @@ from adaptive_trainer import AdaptiveLRScheduler
 
 PROJECT_NAME = 'Midicreator'
 ENTITY_NAME = 'candle2587_team'
-EPOCH_NUM = 200
+EPOCH_NUM = 400
 STEP_SIZE = 20000  # 每多少步进行一次检查和存储检查点
 BATCH_SIZE = 3500
 LOAD_DATA_THREAD = 2
