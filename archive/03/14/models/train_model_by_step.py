@@ -122,7 +122,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 total_start_time = time.time()
 
 # 初始化模型
-model = TransformerModel(vocab_size=30000, encoder_layer = 1, decoder_layer = 6, n_head=2, n_emb=8, context_length=8, pad_token_id=0)  # context_length=256
+model = TransformerModel(vocab_size=30000, encoder_layer = 0, decoder_layer = 6, n_head=2, n_emb=8, context_length=8, pad_token_id=0)  # context_length=256
 model.to(device)
 wandb.watch(model, log='all')
 # 训练模型

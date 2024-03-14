@@ -1,8 +1,8 @@
 import torch
-from model_transformer import TransformerModel
+from model_test import TransformerModel
 import torch.nn.functional as F
 
-CHECK_POINT = "model_output/checkpoints/step_20000.pt"
+CHECK_POINT = "model_output/checkpoints/step_160000.pt"
 
 model = TransformerModel(vocab_size=30000, n_layer=3, n_head=4, n_emb=8, context_length=8, pad_token_id=0)
 checkpoint = torch.load(CHECK_POINT)

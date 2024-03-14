@@ -52,5 +52,5 @@ def preprocess_data(input_dir, prefix, batch_size=8):
 
     f_out.close()  # Make sure to close the file when done
 
-preprocess_data('train_set', 'train_data', batch_size=8)
-preprocess_data('validation_set', 'validation_data', batch_size=8)
+preprocess_data('prediction/train_set', 'prediction/train_data', batch_size=8)
+preprocess_data('prediction/validation_set', 'prediction/validation_data', batch_size=8)
