@@ -7,6 +7,7 @@ import os
 import glob
 import wandb
 import time
+from adaptive_trainer import AdaptiveLRScheduler
 
 PROJECT_NAME = 'Midicreator'
 ENTITY_NAME = 'candle2587_team'
@@ -20,8 +21,9 @@ checkpoint_dir = "model_output/checkpoints"
 os.makedirs(checkpoint_dir, exist_ok=True)
 
 def train_model(device, train_data_loader, validation_data_loader, model, epochs=EPOCH_NUM):
-    optimizer = torch.optim.Adam(model.parameters())
+    optimizer = torch.optim.Adam(model.parameters(),lr=0.001)
     loss_fn = torch.nn.CrossEntropyLoss()
+    lr_scheduler = AdaptiveLRScheduler(optimizer)
 
     total_start_time = time.time()
 
@@ -86,6 +88,17 @@ def train_model(device, train_data_loader, validation_data_loader, model, epochs
                 #wandb.log({"validation loss": loss.item()})
         avg_val_loss = total_val_loss / len(validation_data_loader)
         wandb.log({"avg_validation_loss": avg_val_loss})
+        avg_train_loss = total_train_loss / len(train_data_loader)
+
+        stop_training = lr_scheduler.step(avg_val_loss)
+        if stop_training:
+            print("Stopping training due to possible overfitting.")
+            break  # 停止训练
+
+        # 记录当前学习率
+        current_lr = optimizer.param_groups[0]['lr']
+        current_lr = optimizer.param_groups[0]['lr']
+        wandb.log({"learning_rate": current_lr, "epoch": epoch})
 
         print(f'Epoch {epoch}, Training Loss: {avg_train_loss:.4f}')
         print(f'Epoch {epoch}, Validation Loss: {avg_val_loss:.4f}')
