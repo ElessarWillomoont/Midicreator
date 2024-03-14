@@ -9,10 +9,10 @@ import wandb
 import time
 from adaptive_trainer import AdaptiveLRScheduler
 
-PROJECT_NAME = 'Midicreator'
+PROJECT_NAME = 'Midicreator_Prediction'
 ENTITY_NAME = 'candle2587_team'
-EPOCH_NUM = 400
-STEP_SIZE = 5000  # 每多少步进行一次检查和存储检查点
+EPOCH_NUM = 4000
+STEP_SIZE = 20000  # 每多少步进行一次检查和存储检查点
 BATCH_SIZE = 3500
 LOAD_DATA_THREAD = 2
 
@@ -23,7 +23,7 @@ os.makedirs(checkpoint_dir, exist_ok=True)
 def train_model(device, train_data_loader, validation_data_loader, model, epochs=EPOCH_NUM):
     optimizer = torch.optim.Adam(model.parameters(),lr=0.001)
     loss_fn = torch.nn.CrossEntropyLoss()
-    lr_scheduler = AdaptiveLRScheduler(optimizer)
+    #lr_scheduler = AdaptiveLRScheduler(optimizer)
 
     total_start_time = time.time()
 
@@ -90,15 +90,15 @@ def train_model(device, train_data_loader, validation_data_loader, model, epochs
         wandb.log({"avg_validation_loss": avg_val_loss})
         avg_train_loss = total_train_loss / len(train_data_loader)
 
-        stop_training = lr_scheduler.step(avg_val_loss)
-        if stop_training:
-            print("Stopping training due to possible overfitting.")
-            break  # 停止训练
+        #stop_training = lr_scheduler.step(avg_val_loss)
+        #if stop_training:
+        #    print("Stopping training due to possible overfitting.")
+        #    break  # 停止训练
 
         # 记录当前学习率
-        current_lr = optimizer.param_groups[0]['lr']
-        current_lr = optimizer.param_groups[0]['lr']
-        wandb.log({"learning_rate": current_lr, "epoch": epoch})
+        #current_lr = optimizer.param_groups[0]['lr']
+        #current_lr = optimizer.param_groups[0]['lr']
+        #wandb.log({"learning_rate": current_lr, "epoch": epoch})
 
         print(f'Epoch {epoch}, Training Loss: {avg_train_loss:.4f}')
         print(f'Epoch {epoch}, Validation Loss: {avg_val_loss:.4f}')
@@ -112,12 +112,13 @@ def train_model(device, train_data_loader, validation_data_loader, model, epochs
 wandb.init(project=PROJECT_NAME, entity=ENTITY_NAME)
 
 # 加载数据
-train_data_pattern = 'dataset/train_data_*.json'  # 匹配所有训练数据文件
-validation_data_pattern = 'dataset/validation_data_*.json'  # 匹配所有验证数据文件
+train_data_pattern = 'train_data_*.json'  # 匹配所有训练数据文件
+validation_data_pattern = 'validation_data_*.json'  # 匹配所有验证数据文件
 
 train_data_loader = get_data_loader(train_data_pattern, BATCH_SIZE, LOAD_DATA_THREAD)
 validation_data_loader = get_data_loader(validation_data_pattern, BATCH_SIZE, LOAD_DATA_THREAD)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+#device = torch.device("cpu")
 total_start_time = time.time()
 
 # 初始化模型
