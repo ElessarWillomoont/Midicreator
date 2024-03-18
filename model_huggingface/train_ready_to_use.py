@@ -88,5 +88,5 @@ for epoch in range(EPOCH_NUM):
     scheduler.step(val_loss)
     wandb.log({"EPOCH": epoch})
     wandb.log({"train_rate": loss.item()})
-    current_lr = optimizer.get_last_lr()[0]
+    current_lr = scheduler.optimizer.param_groups[0]['lr']
     wandb.log({"learning_rate": current_lr})
