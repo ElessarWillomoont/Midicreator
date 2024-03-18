@@ -69,7 +69,3 @@ def preprocess_data(input_dir, output_prefix, batch_size=8):
             current_file_size += len(data_pair.encode('utf-8'))
     
     f_out.close()
-
-# Example usage
-preprocess_data('train_set', 'train_data', batch_size=BATCH_SIZE)
-preprocess_data('validation_set', 'validation_data', batch_size=BATCH_SIZE)
