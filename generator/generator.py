@@ -1,5 +1,5 @@
 import torch
-from models import DecoderOnlyTransformer
+from model_huggingface.models import DecoderOnlyTransformer
 import torch.nn.functional as F
 
 CHECK_POINT = "model_output/checkpoints/ckpt_90000.pt"
