@@ -33,7 +33,7 @@ if not midi_paths:
     raise ValueError("No MIDI files found in the specified directory.")
 
 # 使用BPE训练tokenizer
-tokenizer.learn_bpe(vocab_size=30000, files_paths=midi_paths)
+#tokenizer.learn_bpe(vocab_size=30000, files_paths=midi_paths)
 
 # 保存训练好的tokenizer参数到文件
 tokenizer.save_params(out_path=tokenizer_dir, filename='tokenizer.json')
