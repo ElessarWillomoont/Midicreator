@@ -9,14 +9,14 @@ from tqdm import tqdm
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 # Configuration
-PROJECT_NAME = 'Midicreator_Hugging_face_NO_BPE'
+PROJECT_NAME = 'Midicreator_Hugging_face_NO_BPE_bigdata'
 ENTITY_NAME = 'candle2587_team'
 EPOCH_NUM = 4000
-STEP_SIZE = 300
-BATCH_SIZE = 256
+STEP_SIZE = 20000
+BATCH_SIZE = 512
 MAX_LENGTH = 32
 PAD_ID = 0
-CHECK_POINT = "NO"  # Specify your checkpoint path
+CHECK_POINT = 'model_output/archive/ckpt_end_of_little_data.pt'  # Specify your checkpoint path
 
 # Setup device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

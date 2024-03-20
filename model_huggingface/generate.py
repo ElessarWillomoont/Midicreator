@@ -2,10 +2,12 @@ import torch
 from models import DecoderOnlyTransformer
 import torch.nn.functional as F
 
-CHECK_POINT = "model_output/checkpoints/ckpt_180000.pt"
+CHECK_POINT = "model_output/checkpoints/ckpt_12000.pt"
+MAX_LENGTH = 32
+PAD_ID = 0
 
 # Load the model and checkpoint
-model = DecoderOnlyTransformer(vocab_size=30000, decoder_layer=12, n_head=2, n_emb=768, context_length=8, pad_token_id=0)
+model = DecoderOnlyTransformer(vocab_size=10000, decoder_layer=6, n_head=4, n_emb=768, context_length=MAX_LENGTH, pad_token_id=PAD_ID)
 checkpoint = torch.load(CHECK_POINT)
 model.load_state_dict(checkpoint)
 model.eval()
