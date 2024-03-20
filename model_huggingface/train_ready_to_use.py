@@ -9,12 +9,12 @@ from tqdm import tqdm
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 # Configuration
-PROJECT_NAME = 'Midicreator_Hugging_face'
+PROJECT_NAME = 'Midicreator_Hugging_face_NO_BPE'
 ENTITY_NAME = 'candle2587_team'
 EPOCH_NUM = 4000
-STEP_SIZE = 30000
-BATCH_SIZE = 1024
-MAX_LENGTH = 8
+STEP_SIZE = 300
+BATCH_SIZE = 256
+MAX_LENGTH = 32
 PAD_ID = 0
 CHECK_POINT = "NO"  # Specify your checkpoint path
 
@@ -22,7 +22,7 @@ CHECK_POINT = "NO"  # Specify your checkpoint path
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Initialize model
-model = DecoderOnlyTransformer(vocab_size=30000, decoder_layer=12, n_head=2, n_emb=768, context_length=MAX_LENGTH, pad_token_id=PAD_ID)
+model = DecoderOnlyTransformer(vocab_size=10000, decoder_layer=6, n_head=4, n_emb=768, context_length=MAX_LENGTH, pad_token_id=PAD_ID)
 optimizer = Adam(model.parameters(), lr=0.001)
 model.to(device)
 

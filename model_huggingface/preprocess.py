@@ -5,7 +5,7 @@ from torch.utils.data import Dataset, DataLoader
 import torch
 from tqdm.auto import tqdm
 
-MAX_LENGTH = 8  # Maximum sequence length
+MAX_LENGTH = 32  # Maximum sequence length
 FILE_SIZE = 500 * 1024 * 1024  # 500MB in bytes
 BATCH_SIZE = 32
 PAD_ID = 0  # Assuming 0 is the ID for PAD token

@@ -17,7 +17,7 @@ config = TokenizerConfig(**TOKENIZER_PARAMS)
 
 # 使用配置创建tokenizer实例
 tokenizer = REMI(config)
-
+'''
 # 指定MIDI文件和tokenizer保存的目录
 midi_dir = Path('dataset')  # MIDI文件的根目录
 tokenizer_dir = Path('tokenizer')  # tokenizer保存的目录
@@ -37,3 +37,6 @@ if not midi_paths:
 
 # 保存训练好的tokenizer参数到文件
 tokenizer.save_params(out_path=tokenizer_dir, filename='tokenizer.json')
+'''
+print(type(tokenizer.vocab))
+print(tokenizer.special_tokens_ids)
