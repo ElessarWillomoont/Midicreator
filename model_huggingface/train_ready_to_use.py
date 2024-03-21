@@ -13,16 +13,16 @@ PROJECT_NAME = 'Midicreator_Hugging_face_NO_BPE_bigdata'
 ENTITY_NAME = 'candle2587_team'
 EPOCH_NUM = 4000
 STEP_SIZE = 20000
-BATCH_SIZE = 512
+BATCH_SIZE = 368
 MAX_LENGTH = 32
 PAD_ID = 0
-CHECK_POINT = 'model_output/archive/ckpt_end_of_little_data.pt'  # Specify your checkpoint path
+CHECK_POINT = 'NO'  # Specify your checkpoint path
 
 # Setup device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Initialize model
-model = DecoderOnlyTransformer(vocab_size=10000, decoder_layer=6, n_head=4, n_emb=768, context_length=MAX_LENGTH, pad_token_id=PAD_ID)
+model = DecoderOnlyTransformer(vocab_size=465, decoder_layer=6, n_head=4, n_emb=768, context_length=MAX_LENGTH, pad_token_id=PAD_ID)
 optimizer = Adam(model.parameters(), lr=0.001)
 model.to(device)
 
