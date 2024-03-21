@@ -9,11 +9,11 @@ from tqdm import tqdm
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 # Configuration
-PROJECT_NAME = 'Midicreator_Hugging_face_NO_BPE_bigdata'
+PROJECT_NAME = 'Midicreator_Hugging_face_NO_BPE_smalldata'
 ENTITY_NAME = 'candle2587_team'
 EPOCH_NUM = 4000
-STEP_SIZE = 20000
-BATCH_SIZE = 368
+STEP_SIZE = 1000
+BATCH_SIZE = 512
 MAX_LENGTH = 32
 PAD_ID = 0
 CHECK_POINT = 'NO'  # Specify your checkpoint path
