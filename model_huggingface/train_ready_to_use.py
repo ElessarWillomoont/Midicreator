@@ -23,7 +23,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Initialize model
 model = DecoderOnlyTransformer(vocab_size=465, decoder_layer=6, n_head=4, n_emb=768, context_length=MAX_LENGTH, pad_token_id=PAD_ID)
-optimizer = Adam(model.parameters(), lr=0.001)
+optimizer = Adam(model.parameters(), lr=0.005)
 model.to(device)
 
 # Load checkpoint if exists

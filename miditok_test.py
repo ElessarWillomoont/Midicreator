@@ -51,12 +51,15 @@ tokenizer = REMI(params=tokenizer_path)
 # 假设这是您的词汇表
 vocabulary = tokenizer.vocab
 json_file = 'vocabulary.json'
-ids = [119, 157, 237, 46, 117, 157, 37, 115, 157, 42, 112, 157, 240, 42, 114, 157, 46, 116, 157, 37, 117, 157, 243, 46, 119]
+ids = [61, 157, 126, 392, 48, 126, 157, 157, 392, 126, 126, 157, 157, 392, 157, 157, 392, 157, 31, 131, 31, 31, 392, 31, 43, 392, 31, 31, 392, 133, 31, 157, 31, 131, 157, 133, 133, 129, 36]
+
+
 tokens = tokens_to_vocabulary(ids, json_file)
-tokens = TokSequence(tokens)
-print(tokens)
-input('say sth')
+tokens = TokSequence([[tokens]])
 midi = tokenizer._tokens_to_midi(tokens)
+midi.dump_midi('output.midi')
+print(midi)
+
 
 
 # input('say sth')
