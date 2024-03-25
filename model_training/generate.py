@@ -1,5 +1,5 @@
 import torch
-from models import DecoderOnlyTransformer
+from shared.models import DecoderOnlyTransformer
 import torch.nn.functional as F
 
 CHECK_POINT = "model_output/archive/ckpt_loss_not_change.pt"

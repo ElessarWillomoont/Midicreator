@@ -2,7 +2,7 @@ import os
 import torch
 from torch.optim import Adam
 from torch.utils.data import DataLoader
-from models import DecoderOnlyTransformer
+from shared.models import DecoderOnlyTransformer
 from preprocess import MusicDataset, custom_collate_fn
 import wandb
 from tqdm import tqdm
