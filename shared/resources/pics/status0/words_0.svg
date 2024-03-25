@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 92.45">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-2 {
+        letter-spacing: -.03em;
+      }
+
+      .cls-3 {
+        fill: #7bccff;
+        font-family: CooperBlack, 'Cooper Black';
+        font-size: 72px;
+        stroke: #7bccff;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-5 {
+        letter-spacing: 0em;
+      }
+
+      .cls-6 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-7 {
+        letter-spacing: 0em;
+      }
+
+      .cls-8 {
+        letter-spacing: -.05em;
+      }
+
+      .cls-9 {
+        letter-spacing: .01em;
+      }
+
+      .cls-10 {
+        letter-spacing: -.01em;
+      }
+
+      .cls-11 {
+        letter-spacing: 0em;
+      }
+    </style>
+  </defs>
+  <text class="cls-3" transform="translate(276.74 70.26)"><tspan x="0" y="0">H</tspan><tspan class="cls-10" x="57.73" y="0">e</tspan><tspan class="cls-8" x="94.99" y="0">y</tspan><tspan x="136.09" y="0">, </tspan><tspan class="cls-2" x="175.68" y="0">w</tspan><tspan x="244.83" y="0">elcome, p</tspan><tspan class="cls-4" x="585.67" y="0">r</tspan><tspan x="623.39" y="0">ess a</tspan><tspan class="cls-6" x="789.01" y="0">n</tspan><tspan x="836.12" y="0">y </tspan><tspan class="cls-1" x="898.7" y="0">k</tspan><tspan class="cls-10" x="950.27" y="0">e</tspan><tspan x="987.54" y="0">y </tspan><tspan class="cls-5" x="1050.12" y="0">t</tspan><tspan x="1083.06" y="0">o </tspan><tspan class="cls-7" x="1144.41" y="0">s</tspan><tspan class="cls-11" x="1178.93" y="0">t</tspan><tspan x="1212.64" y="0">a</tspan><tspan class="cls-9" x="1253.46" y="0">r</tspan><tspan x="1293.01" y="0">t !</tspan></text>
+</svg>
