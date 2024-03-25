@@ -57,8 +57,8 @@ class StatusWindow0(QWidget):
         total_height_available = HEIGHT - (vertical_space * 3)  # 总可用高度，减去顶部、底部和两个SVG之间的空间
 
         # 分配高度给face_svg和words_svg
-        face_height = total_height_available * 0.85  # 假设face_svg使用60%的可用高度
-        words_height = total_height_available * 0.15  # 剩余40%给words_svg
+        face_height = total_height_available * 0.9  # 假设face_svg使用60%的可用高度
+        words_height = total_height_available * 0.1  # 剩余40%给words_svg
 
         self.scaleAndPositionSvg(self.face_svg, face_height, vertical_space)
         self.scaleAndPositionSvg(self.words_svg, words_height, vertical_space * 2 + face_height)
