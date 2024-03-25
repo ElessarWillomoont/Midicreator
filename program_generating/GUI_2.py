@@ -1,10 +1,11 @@
-from PyQt5.QtWidgets import QApplication, QWidget
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout
+from PyQt5.QtCore import Qt, QThread, pyqtSignal, QCoreApplication
 from PyQt5.QtGui import QPainter, QColor, QFont, QPen
+from PyQt5.QtSvg import QSvgWidget
 import sys
 import time
 
-WIDTH = 1920
+WIDTH = 2560
 HEIGHT = 1080
 
 class BaseStatusWindow(QWidget):
@@ -33,9 +34,50 @@ class BaseStatusWindow(QWidget):
         qp.drawText(self.rect(), Qt.AlignCenter, text)
 
 # 为每个状态定义一个窗口类
-class StatusWindow0(BaseStatusWindow):
+class StatusWindow0(QWidget):
     def __init__(self):
-        super().__init__(0)
+        super().__init__()
+        self.setGeometry(0, 0, WIDTH, HEIGHT)
+        self.setWindowTitle('状态 0')
+        self.setAttribute(Qt.WA_TranslucentBackground)  # 透明背景
+        self.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
+        self.initUI()
+
+    def initUI(self):
+        # 加载SVG文件
+        face_svg_path = 'shared/resources/pics/status0/face_0.svg'
+        words_svg_path = 'shared/resources/pics/status0/words_0.svg'
+        self.face_svg = QSvgWidget(face_svg_path, self)
+        self.words_svg = QSvgWidget(words_svg_path, self)
+        self.positionSvgWidgets()
+
+    def positionSvgWidgets(self):
+        # 只根据屏幕高度调整大小并保持原始长宽比
+        vertical_space = HEIGHT * 0.1  # 顶部和底部的空间
+        total_height_available = HEIGHT - (vertical_space * 3)  # 总可用高度，减去顶部、底部和两个SVG之间的空间
+
+        # 分配高度给face_svg和words_svg
+        face_height = total_height_available * 0.85  # 假设face_svg使用60%的可用高度
+        words_height = total_height_available * 0.15  # 剩余40%给words_svg
+
+        self.scaleAndPositionSvg(self.face_svg, face_height, vertical_space)
+        self.scaleAndPositionSvg(self.words_svg, words_height, vertical_space * 2 + face_height)
+
+    def scaleAndPositionSvg(self, svg_widget, target_height, top_margin):
+        original_size = svg_widget.renderer().defaultSize()
+        scale_factor = target_height / original_size.height()
+        new_width = original_size.width() * scale_factor
+        new_x = (WIDTH - new_width) / 2
+        svg_widget.setGeometry(int(new_x), int(top_margin), int(new_width), int(target_height))
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setBrush(QColor(0, 0, 0))  # 绘制黑色背景
+        painter.drawRect(self.rect())
+
+    def showEvent(self, event):
+        screen = QCoreApplication.instance().primaryScreen().geometry()
+        self.move((screen.width() - WIDTH) // 2, (screen.height() - HEIGHT) // 2)
 
 class StatusWindow1(BaseStatusWindow):
     def __init__(self):
