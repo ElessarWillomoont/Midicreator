@@ -2,7 +2,7 @@ import torch
 from models import DecoderOnlyTransformer
 import torch.nn.functional as F
 
-CHECK_POINT = "model_output/checkpoints/ckpt_48000.pt"
+CHECK_POINT = "model_output/archive/ckpt_loss_not_change.pt"
 MAX_LENGTH = 32
 PAD_ID = 0
 
@@ -16,7 +16,7 @@ model.eval()
 input_data = input("input ids :")
 input_ids_list = [int(x) for x in input_data.split(",")]
 input_tensor = torch.tensor([input_ids_list], dtype=torch.long)
-padding_needed = max(0, 8 - input_tensor.shape[1])
+padding_needed = max(0, 32 - input_tensor.shape[1])
 input_tensor_padded = F.pad(input_tensor, (0, padding_needed), 'constant', 0)
 
 # Create an attention mask for the padded input tensor

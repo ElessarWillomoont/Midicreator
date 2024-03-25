@@ -3,7 +3,7 @@ import shutil
 import random
 import math
 
-PICK_RATIO = 0.05
+PICK_RATIO = 0.1
 
 # 定义目录
 dataset_dir = Path("dataset/dataset_json")
