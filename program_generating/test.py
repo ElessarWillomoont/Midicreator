@@ -1,24 +1,18 @@
 import time
-from GUI import StatusManager, TestThread
+from GUI import StatusManager
 import generator_founctions as gfs
 from miditok import REMI
 from pathlib import Path
 from copy import deepcopy
-import json
 from mido import MidiFile, MidiTrack
 import mido
 import time
-from PyQt5.QtWidgets import QApplication, QWidget, QGraphicsView, QGraphicsScene, QGraphicsScene
-from PyQt5.QtCore import Qt, QThread, pyqtSignal, QCoreApplication, QTimer
-from PyQt5.QtGui import QPainter, QColor, QFont, QTransform
-from PyQt5.QtSvg import QSvgWidget, QGraphicsSvgItem
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtCore import QThread, pyqtSignal
 import sys  # 导入sys用于退出应用
 import sys
 import time
-
-#here is a comment
-
 def detect_notes_sequence(inport):
     desired_sequence = [60, 62, 64, 65, 67, 69, 71]  # MIDI notes for CDEFGAB
     pressed_sequence = []
@@ -116,7 +110,6 @@ class GenerateThread(QThread):
         vocabulary_json_file = 'shared/vocabulary/vocabulary.json'
         # vocabulary = tokenizer.vocab
         # save_vocabulary_to_json(vocabulary,json_file)
-        #gfs.process_midi(midi_file,midi_file_output,tokenizer,vocabulary_json_file)
         print("entered mf at gfs")
         ports_output = mido.get_output_names()
         ports_input = mido.get_input_names()
@@ -140,98 +133,91 @@ class GenerateThread(QThread):
         self.status_changed.emit(new_status)
         with mido.open_output(port_name_output[0]) as port, mido.open_input(port_name_input[0]) as ports_input:
             print(f"Sending notes to port {port_name_output[0]}")
-            while True:  # First loop
-                if detect_sequence(ports_input, 60, 1):  # Detecting CCC
-                    print("Sequence C detected, entering second loop")
-                    new_status = 2
-                    self.status_changed.emit(new_status)
-                    recording_started = False
-                    recording_finished = False 
-                    while True:  # Second loop
-                        new_status = 2
-                        self.status_changed.emit(new_status)
-                        recording = []
-                        recording_started = False
-                        print("Waiting for start sequence...")
-                        recording_started = False
-                        recording_finished = False
-                        while not recording_finished:
-                            for msg in ports_input.iter_pending():
-                                if not recording_started:
-                                    # Start recording if the start sequence is detected
-                                    if detect_notes_sequence(ports_input):
-                                        new_status = 3
-                                        self.status_changed.emit(new_status)
-                                        print("Start sequence detected, beginning recording.")
-                                        recording_started = True
-                                else:
-                                    # Add messages to recording if recording has started
-                                    recording.append(msg)
-                                    # Stop recording if the end sequence is detected
-                                    if detect_reverse_notes_sequence(ports_input):
-                                        print("End sequence detected, stopping recording.")
-                                        recording_finished = True
-                                        break
-                                if recording_finished:
-                                    break 
-                        recorded_notes = recording
-                        print("Recorded")
-                        new_status = 4
-                        self.status_changed.emit(new_status)
-                        midi_file = MidiFile()
-                        track = MidiTrack()
-                        midi_file.tracks.append(track)
-                        for msg in recorded_notes:
-                            track.append(msg)
-                        midi_file.save(midi_file_input)
-                        gfs.process_midi(midi_file_input,midi_file_output,tokenizer,vocabulary_json_file)
-                        print("prcess completed")
-                        print("Recording saved to 'input.mid'")
-                        new_status = 5
-                        self.status_changed.emit(new_status)
-                        if detect_sequence(ports_input, 60, 3):  # Detecting CCC
-                            new_status = 6
-                            self.status_changed.emit(new_status)
-                            print("Sequence CCC detected, playing 'output.mid'")
-                            try:
-                                play_midi_file(port, 'output.mid', 10)
-                            except FileNotFoundError:
-                                print("File 'output.mid' not found.")
-
-                            if detect_sequence(ports_input, 71, 3):  # Detecting BBB
-                                print("Sequence BBB detected, returning to first loop")
-                                new_status = 1
-                                self.status_changed.emit(new_status)
-                                break  # Exit the second loop
-
-class ExitOnCAndBThread(QThread):
-    def __init__(self, input_port):
-        super().__init__()
-        self.input_port = input_port
-        self.low_c_pressed = False
-        self.high_b_pressed = False
-
-    def run(self):
-        with mido.open_input(self.input_port) as ports_input:
-            while True:
+            low_c_pressed = False
+            high_b_pressed = False
+            while True:  # 主循环
                 for msg in ports_input.iter_pending():
+                    # 处理低音C和高音B的逻辑
                     if msg.type == 'note_on':
-                        # 检查是否为低音C或高音B
-                        if msg.note == 24:  # 低音C的MIDI编号
-                            self.low_c_pressed = True
-                        elif msg.note == 83:  # 高音B的MIDI编号
-                            self.high_b_pressed = True
-                    elif msg.type == 'note_off':
-                        # 检查哪个键被释放
-                        if msg.note == 24:  # 低音C
-                            self.low_c_pressed = False
+                        if msg.note == 36:  # 低音C
+                            print("low C detected")
+                            low_c_pressed = True
+                            print("High B detected")
                         elif msg.note == 83:  # 高音B
-                            self.high_b_pressed = False
-
+                            high_b_pressed = True
+                    elif msg.type == 'note_off':
+                        if msg.note == 36:
+                            low_c_pressed = False
+                        elif msg.note == 83:
+                            high_b_pressed = False
+                    
                     # 检查是否同时按下低音C和高音B
-                    if self.low_c_pressed and self.high_b_pressed:
+                    if low_c_pressed and high_b_pressed:
                         print("Low C and High B pressed simultaneously. Exiting...")
                         sys.exit()  # 退出程序
+                    while True:  # First loop
+                        if detect_sequence(ports_input, 60, 1):  # Detecting CCC
+                            print("Sequence C detected, entering second loop")
+                            new_status = 2
+                            self.status_changed.emit(new_status)
+                            recording_started = False
+                            recording_finished = False 
+                            while True:  # Second loop
+                                new_status = 2
+                                self.status_changed.emit(new_status)
+                                recording = []
+                                recording_started = False
+                                print("Waiting for start sequence...")
+                                recording_started = False
+                                recording_finished = False
+                                while not recording_finished:
+                                    for msg in ports_input.iter_pending():
+                                        if not recording_started:
+                                            # Start recording if the start sequence is detected
+                                            if detect_notes_sequence(ports_input):
+                                                new_status = 3
+                                                self.status_changed.emit(new_status)
+                                                print("Start sequence detected, beginning recording.")
+                                                recording_started = True
+                                        else:
+                                            # Add messages to recording if recording has started
+                                            recording.append(msg)
+                                            # Stop recording if the end sequence is detected
+                                            if detect_reverse_notes_sequence(ports_input):
+                                                print("End sequence detected, stopping recording.")
+                                                recording_finished = True
+                                                break
+                                        if recording_finished:
+                                            break 
+                                recorded_notes = recording
+                                print("Recorded")
+                                new_status = 4
+                                self.status_changed.emit(new_status)
+                                midi_file = MidiFile()
+                                track = MidiTrack()
+                                midi_file.tracks.append(track)
+                                for msg in recorded_notes:
+                                    track.append(msg)
+                                midi_file.save(midi_file_input)
+                                gfs.process_midi(midi_file_input,midi_file_output,tokenizer,vocabulary_json_file)
+                                print("prcess completed")
+                                print("Recording saved to 'input.mid'")
+                                new_status = 5
+                                self.status_changed.emit(new_status)
+                                if detect_sequence(ports_input, 60, 3):  # Detecting CCC
+                                    new_status = 6
+                                    self.status_changed.emit(new_status)
+                                    print("Sequence CCC detected, playing 'output.mid'")
+                                    try:
+                                        play_midi_file(port, 'output.mid', 10)
+                                    except FileNotFoundError:
+                                        print("File 'output.mid' not found.")
+
+                                    if detect_sequence(ports_input, 71, 3):  # Detecting BBB
+                                        print("Sequence BBB detected, returning to first loop")
+                                        new_status = 1
+                                        self.status_changed.emit(new_status)
+                                        break  # Exit the second loop
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -1,4 +1,3 @@
-from miditoolkit import MidiFile
 from miditok import REMI, TokSequence
 from pathlib import Path
 from copy import deepcopy
@@ -50,14 +49,15 @@ tokenizer = REMI(params=tokenizer_path)
 
 # 假设这是您的词汇表
 vocabulary = tokenizer.vocab
-json_file = 'vocabulary.json'
+json_file = 'shared/vocabulary.json'
+save_vocabulary_to_json(vocabulary,json_file)
 ids = [328, 284, 452, 326, 86, 123, 212, 249, 344, 358, 437, 65, 98, 167, 366, 236, 446, 10, 139, 168, 306, 447, 60, 329, 102, 190, 292, 427, 66, 132, 189, 248, 442, 81, 95, 189, 259, 436, 50, 128, 210, 247, 425, 319, 45, 112, 210, 273, 439, 37, 116, 190, 307, 444, 375, 24, 386, 96, 169, 274, 427, 13, 154, 193, 307, 452, 21, 154, 217, 313, 440, 73, 107, 215, 281, 432, 91, 126, 203, 299, 330, 430, 82, 112, 203, 281, 451, 327, 11, 115, 199, 297, 390, 445, 56, 151, 371, 191, 225, 451, 52, 107, 199, 316, 440, 60, 154, 164, 223, 440, 15, 107, 196, 292, 453, 373, 361, 64, 97, 167, 317, 307, 433, 75, 129, 167, 299, 441]
 
 
 tokens = tokens_to_vocabulary(ids, json_file)
 print(tokens)
 input("say sth")
-tokens = TokSequence([[tokens]])
+tokens = [TokSequence(tokens)]
 midi = tokenizer._tokens_to_midi(tokens)
 midi.dump_midi('output.midi')
 print(midi)

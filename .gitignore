@@ -3,6 +3,7 @@
 myenv/
 dataset/
 maestro/
+shared/ckpt/
 mmm_tokenizer_lmd_clean/
 wandb/
 output/

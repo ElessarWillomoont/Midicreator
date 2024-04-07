@@ -1,12 +1,12 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QGraphicsView, QGraphicsScene, QGraphicsScene
+from PyQt5.QtWidgets import QApplication, QWidget, QGraphicsView, QGraphicsScene, QGraphicsScene
 from PyQt5.QtCore import Qt, QThread, pyqtSignal, QCoreApplication, QTimer
 from PyQt5.QtGui import QPainter, QColor, QFont, QTransform
-from PyQt5.QtSvg import QSvgWidget, QSvgRenderer, QGraphicsSvgItem
+from PyQt5.QtSvg import QSvgWidget, QGraphicsSvgItem
 import sys
 import time
 
-WIDTH = 2560
-HEIGHT = 1080
+WIDTH = 2880
+HEIGHT = 1680
 
 class BaseStatusWindow(QWidget):
     def __init__(self, status):
@@ -103,9 +103,9 @@ class StatusWindow1(QWidget):
         total_height_available = HEIGHT - vertical_space_top - vertical_space_bottom - vertical_space_between * 2  # 总可用高度
 
         # 假设的大小比例，可以根据需求调整
-        face_height_ratio = 0.3
+        face_height_ratio = 0.35
         keys_height_ratio = 0.5
-        words_height_ratio = 0.2
+        words_height_ratio = 0.15
 
         face_height = total_height_available * face_height_ratio
         keys_height = total_height_available * keys_height_ratio
@@ -272,9 +272,9 @@ class StatusWindow4(QWidget):
 
         total_height_available = HEIGHT - vertical_space_top - vertical_space_bottom - vertical_space_between * 2  # 总可用高度
 
-        face_height = total_height_available * 0.3
+        face_height = total_height_available * 0.4
         keys_height = total_height_available * 0.5
-        words_height = total_height_available * 0.2
+        words_height = total_height_available * 0.1
 
         self.scaleAndPositionSvg(self.face_svg, face_height, vertical_space_top)
         self.scaleAndPositionSvg(self.load_ring_svg, keys_height, vertical_space_top + face_height + vertical_space_between)
@@ -460,7 +460,7 @@ class StatusManager:
         self.current_window = window_class()
         self.current_window.show()
 
-class StatusThread(QThread):
+class TestThread(QThread):
     status_changed = pyqtSignal(int)
 
     def run(self):
@@ -480,7 +480,7 @@ if __name__ == '__main__':
     def on_status_changed(status):
         manager.changeStatus(status)
 
-    status_thread = StatusThread()
+    status_thread = TestThread()
     status_thread.status_changed.connect(on_status_changed)
     status_thread.start()
 
