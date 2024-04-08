@@ -40,3 +40,5 @@ n_head = HEAD_NUM
 n_emb = N_EMB
 context_length = MAX_LENGTH
 pad_token_id = PAD_ID
+
+DATASET_LOC = "maestro" #folder of the dataset

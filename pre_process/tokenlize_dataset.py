@@ -1,6 +1,15 @@
 from miditoolkit import MidiFile
 from miditok import REMI
 from pathlib import Path
+import os
+import sys
+# Setting up the environment
+script_path = os.path.abspath(__file__)
+parent_directory = os.path.dirname(os.path.dirname(script_path))
+sys.path.append(parent_directory)
+import shared.config as configue
+
+PATH_OF_DATA = configue.DATASET_LOC
 
 def load_midi(midi_path):
     """Load a MIDI file."""
@@ -13,7 +22,7 @@ tokenizer_path = Path('tokenizer/tokenizer.json')
 tokenizer = REMI(params=tokenizer_path)
 
 # Set input and output directories
-input_dir = Path("maestro")
+input_dir = Path(PATH_OF_DATA)
 token_dir = Path("dataset/midis/tokens")
 dataset_dir = Path("dataset/dataset_json")
 token_dir.mkdir(parents=True, exist_ok=True)
