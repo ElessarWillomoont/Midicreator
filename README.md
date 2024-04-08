@@ -1,9 +1,8 @@
-
 # Talk with piano
 
 this is a project that bridges the gap between AI and music education by offering an interactive platform where learners can engage in a dialogue with a digital piano, fostering an intuitive understanding of music composition. Embracing the transformative power of AI, the project aims to democratize music learning, making it more accessible and enjoyable, particularly in under-resourced areas. While it stands on the frontier of educational innovation, the project is an ongoing exploration, seeking to refine the synergy between human musical creativity and machine intelligence.
 
-**Before Use:**
+## Before Use:
 
 normaly, if you need to change the parameter of the program, only need to adjust the config.py
 
@@ -21,7 +20,7 @@ The generator part is designed to interact with Yamaha Disklavier piano, if you 
 
 If you want to train the model yourself, feel free to adjust the parameter realated in config.py, but rember to adjust the PROJECT_NAME and ENTITY_NAME to your own wandb project, or if you don't want to use it, jus delete every line realated to waandb in model_train.py
 
-**How to Use:**
+## How to Use:
 
 If you want to train a model yourself, first, prepare your own dataset(in form of midi file), and then, put all of your midi file in a folder in root folder of the project, and then, adjust the line below in the shared/configure.py, change maestro to the dataset folder of yourself.
 
@@ -44,4 +43,3 @@ Then, run the model_training/model_training.py. the training process will begin.
 feel free to adjust other prameters in shared/configure.py to fit your training device.
 
 If you want just directly generate melodies, simply plug in the piano, and run the program_generating/generator.py
-    
