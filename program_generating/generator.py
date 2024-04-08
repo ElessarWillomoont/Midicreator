@@ -1,23 +1,19 @@
-import time
-from GUI import StatusManager, TestThread
-import generator_founctions as gfs
-from miditok import REMI
-from pathlib import Path
-from copy import deepcopy
-import json
-from mido import MidiFile, MidiTrack
-import mido
-import time
-from PyQt5.QtWidgets import QApplication, QWidget, QGraphicsView, QGraphicsScene, QGraphicsScene
-from PyQt5.QtCore import Qt, QThread, pyqtSignal, QCoreApplication, QTimer
-from PyQt5.QtGui import QPainter, QColor, QFont, QTransform
-from PyQt5.QtSvg import QSvgWidget, QGraphicsSvgItem
-from PyQt5.QtCore import QThread, pyqtSignal
-import sys  # 导入sys用于退出应用
+# Standard library imports
 import sys
 import time
+from pathlib import Path
+from copy import deepcopy
 
-#here is a comment
+# Third-party library imports
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import QThread, pyqtSignal
+import mido
+from mido import MidiFile, MidiTrack
+from miditok import REMI
+
+# Internal module imports
+from GUI import StatusManager
+import generator_founctions as gfs
 
 def detect_notes_sequence(inport):
     desired_sequence = [60, 62, 64, 65, 67, 69, 71]  # MIDI notes for CDEFGAB
@@ -109,14 +105,10 @@ class GenerateThread(QThread):
         new_status = 0
         self.status_changed.emit(new_status)
         tokenizer_path = Path('tokenizer/tokenizer.json')
-        # Initialize tokenizer using the saved parameters
         tokenizer = REMI(params=tokenizer_path)
         midi_file_input = 'input.mid'
         midi_file_output = 'output.mid'
         vocabulary_json_file = 'shared/vocabulary/vocabulary.json'
-        # vocabulary = tokenizer.vocab
-        # save_vocabulary_to_json(vocabulary,json_file)
-        #gfs.process_midi(midi_file,midi_file_output,tokenizer,vocabulary_json_file)
         print("entered mf at gfs")
         ports_output = mido.get_output_names()
         ports_input = mido.get_input_names()
@@ -204,6 +196,7 @@ class GenerateThread(QThread):
                                 self.status_changed.emit(new_status)
                                 break  # Exit the second loop
 
+# Thread to exit the program when specific notes are played
 class ExitOnCAndBThread(QThread):
     def __init__(self, input_port):
         super().__init__()
@@ -216,26 +209,24 @@ class ExitOnCAndBThread(QThread):
             while True:
                 for msg in ports_input.iter_pending():
                     if msg.type == 'note_on':
-                        # 检查是否为低音C或高音B
-                        if msg.note == 24:  # 低音C的MIDI编号
+                        if msg.note == 24:  # MIDI number for low C
                             self.low_c_pressed = True
-                        elif msg.note == 83:  # 高音B的MIDI编号
+                        elif msg.note == 83:  # MIDI number for high B
                             self.high_b_pressed = True
                     elif msg.type == 'note_off':
-                        # 检查哪个键被释放
-                        if msg.note == 24:  # 低音C
+                        if msg.note == 24:  # Low C
                             self.low_c_pressed = False
-                        elif msg.note == 83:  # 高音B
+                        elif msg.note == 83:  # High B
                             self.high_b_pressed = False
 
-                    # 检查是否同时按下低音C和高音B
+                    # Check if both low C and high B are pressed simultaneously
                     if self.low_c_pressed and self.high_b_pressed:
                         print("Low C and High B pressed simultaneously. Exiting...")
-                        sys.exit()  # 退出程序
+                        sys.exit()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    manager = StatusManager(0)  # 初始化状态管理器，状态设置为0
+    manager = StatusManager(0)  # Initialize status manager with status 0
 
     def on_status_changed(status):
         manager.changeStatus(status)

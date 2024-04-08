@@ -4,9 +4,15 @@ from PyQt5.QtGui import QPainter, QColor, QFont, QTransform
 from PyQt5.QtSvg import QSvgWidget, QGraphicsSvgItem
 import sys
 import time
+import os
+script_path = os.path.abspath(__file__)
+parent_directory = os.path.dirname(os.path.dirname(script_path))
+sys.path.append(parent_directory)
+import shared.config as configue
 
-WIDTH = 2880
-HEIGHT = 1680
+# Constants for window dimensions
+WIDTH = configue.WIDTH
+HEIGHT = configue.HEIGHT
 
 class BaseStatusWindow(QWidget):
     def __init__(self, status):
@@ -16,35 +22,35 @@ class BaseStatusWindow(QWidget):
 
     def initUI(self):
         self.setFixedSize(WIDTH, HEIGHT)
-        self.setWindowTitle('SVG状态显示')
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 透明背景
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
+        self.setWindowTitle('SVG Status Display')
+        self.setAttribute(Qt.WA_TranslucentBackground)  # transparent background
+        self.setWindowFlags(Qt.FramelessWindowHint)  # no outline
 
     def paintEvent(self, event):
         qp = QPainter(self)
-        qp.setBrush(QColor(0, 0, 0))  # 黑色背景
+        qp.setBrush(QColor(0, 0, 0))  # Set background color to black
         qp.drawRect(self.rect())
         
-        # 设置文本颜色和字体
+        # Set text color and font
         qp.setPen(QColor(255, 255, 255))
         qp.setFont(QFont('Arial', 48))
         
-        # 绘制当前状态值
-        text = f"状态 {self.status}"
+        # Draw the current status value
+        text = f"status {self.status}"
         qp.drawText(self.rect(), Qt.AlignCenter, text)
 
-# 为每个状态定义一个窗口类
+# set a window class for each status
 class StatusWindow0(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(0, 0, WIDTH, HEIGHT)
-        self.setWindowTitle('状态 0')
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 透明背景
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
+        self.setWindowTitle('Status 0')
+        self.setAttribute(Qt.WA_TranslucentBackground)  # transparent background
+        self.setWindowFlags(Qt.FramelessWindowHint)  # no outline
         self.initUI()
 
     def initUI(self):
-        # 加载SVG文件
+        # Load SVG files
         face_svg_path = 'shared/resources/pics/status0/face_0.svg'
         words_svg_path = 'shared/resources/pics/status0/words_0.svg'
         self.face_svg = QSvgWidget(face_svg_path, self)
@@ -52,13 +58,13 @@ class StatusWindow0(QWidget):
         self.positionSvgWidgets()
 
     def positionSvgWidgets(self):
-        # 只根据屏幕高度调整大小并保持原始长宽比
-        vertical_space = HEIGHT * 0.1  # 顶部和底部的空间
-        total_height_available = HEIGHT - (vertical_space * 3)  # 总可用高度，减去顶部、底部和两个SVG之间的空间
+        # Adjust the size based on screen height while maintaining the aspect ratio
+        vertical_space = HEIGHT * 0.1  # Space at the top and bottom
+        total_height_available = HEIGHT - (vertical_space * 3)  # Total available height, subtracting space for the top, bottom, and between the two SVGs
 
-        # 分配高度给face_svg和words_svg
-        face_height = total_height_available * 0.9  # 假设face_svg使用60%的可用高度
-        words_height = total_height_available * 0.1  # 剩余40%给words_svg
+        # Allocate height to face_svg and words_svg
+        face_height = total_height_available * 0.9  # Assume face_svg uses 60% of the available height
+        words_height = total_height_available * 0.1  # The remaining 40% for words_svg
 
         self.scaleAndPositionSvg(self.face_svg, face_height, vertical_space)
         self.scaleAndPositionSvg(self.words_svg, words_height, vertical_space * 2 + face_height)
@@ -72,7 +78,7 @@ class StatusWindow0(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setBrush(QColor(0, 0, 0))  # 绘制黑色背景
+        painter.setBrush(QColor(0, 0, 0))  # Draw black background
         painter.drawRect(self.rect())
 
     def showEvent(self, event):
@@ -83,26 +89,26 @@ class StatusWindow1(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(0, 0, WIDTH, HEIGHT)
-        self.setWindowTitle('状态 1')
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 透明背景
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
+        self.setWindowTitle('Status 1')
+        self.setAttribute(Qt.WA_TranslucentBackground)  # transparent background
+        self.setWindowFlags(Qt.FramelessWindowHint)  # no outline
         self.initUI()
 
     def initUI(self):
-        # 加载SVG文件，确保路径正确
+        # Load SVG files, ensure paths are correct
         self.face_svg = QSvgWidget('shared/resources/pics/status1/face_1.svg', self)
         self.keys_svg = QSvgWidget('shared/resources/pics/status1/keys_1.svg', self)
         self.words_svg = QSvgWidget('shared/resources/pics/status1/words_1.svg', self)
         self.positionSvgWidgets()
 
     def positionSvgWidgets(self):
-        vertical_space_top = HEIGHT * 0.1  # 顶部空间
-        vertical_space_bottom = HEIGHT * 0.1  # 底部空间
-        vertical_space_between = HEIGHT * 0.05  # 两个SVG之间的空间
+        vertical_space_top = HEIGHT * 0.1  
+        vertical_space_bottom = HEIGHT * 0.1  
+        vertical_space_between = HEIGHT * 0.05  
 
         total_height_available = HEIGHT - vertical_space_top - vertical_space_bottom - vertical_space_between * 2  # 总可用高度
 
-        # 假设的大小比例，可以根据需求调整
+        # Assumed size ratios, adjust as needed
         face_height_ratio = 0.35
         keys_height_ratio = 0.5
         words_height_ratio = 0.15
@@ -124,7 +130,7 @@ class StatusWindow1(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setBrush(QColor(0, 0, 0))  # 黑色背景
+        painter.setBrush(QColor(0, 0, 0))  # Set background color to black
         painter.drawRect(self.rect())
 
     def showEvent(self, event):
@@ -135,26 +141,26 @@ class StatusWindow2(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(0, 0, WIDTH, HEIGHT)
-        self.setWindowTitle('状态 2')
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 透明背景
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
+        self.setWindowTitle('Status 2')
+        self.setAttribute(Qt.WA_TranslucentBackground)  # transparent background
+        self.setWindowFlags(Qt.FramelessWindowHint)  # no outline
         self.initUI()
 
     def initUI(self):
-        # 加载SVG文件，确保路径正确
+        # Load SVG files, ensure paths are correct
         self.face_svg = QSvgWidget('shared/resources/pics/status2/face_2.svg', self)
         self.keys_svg = QSvgWidget('shared/resources/pics/status2/keys_2.svg', self)
         self.words_svg = QSvgWidget('shared/resources/pics/status2/words_2.svg', self)
         self.positionSvgWidgets()
 
     def positionSvgWidgets(self):
-        vertical_space_top = HEIGHT * 0.1  # 顶部空间
-        vertical_space_bottom = HEIGHT * 0.1  # 底部空间
-        vertical_space_between = HEIGHT * 0.05  # 两个SVG之间的空间
+        vertical_space_top = HEIGHT * 0.1  
+        vertical_space_bottom = HEIGHT * 0.1  
+        vertical_space_between = HEIGHT * 0.05  
 
         total_height_available = HEIGHT - vertical_space_top - vertical_space_bottom - vertical_space_between * 2  # 总可用高度
 
-        # 假设的大小比例，可以根据需求调整
+        # Assumed size ratios, adjust as needed
         face_height_ratio = 0.4
         keys_height_ratio = 0.5
         words_height_ratio = 0.1
@@ -176,7 +182,7 @@ class StatusWindow2(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setBrush(QColor(0, 0, 0))  # 黑色背景
+        painter.setBrush(QColor(0, 0, 0))  # Set background color to black
         painter.drawRect(self.rect())
 
     def showEvent(self, event):
@@ -187,26 +193,26 @@ class StatusWindow3(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(0, 0, WIDTH, HEIGHT)
-        self.setWindowTitle('状态 3')
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 透明背景
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
+        self.setWindowTitle('Status 3')
+        self.setAttribute(Qt.WA_TranslucentBackground)  # transparent background
+        self.setWindowFlags(Qt.FramelessWindowHint)  # no outline
         self.initUI()
 
     def initUI(self):
-        # 加载SVG文件，确保路径正确
+        # Load SVG files, ensure paths are correct
         self.face_svg = QSvgWidget('shared/resources/pics/status3/face_3.svg', self)
         self.keys_svg = QSvgWidget('shared/resources/pics/status3/keys_3.svg', self)
         self.words_svg = QSvgWidget('shared/resources/pics/status3/words_3.svg', self)
         self.positionSvgWidgets()
 
     def positionSvgWidgets(self):
-        vertical_space_top = HEIGHT * 0.1  # 顶部空间
-        vertical_space_bottom = HEIGHT * 0.1  # 底部空间
-        vertical_space_between = HEIGHT * 0.05  # 两个SVG之间的空间
+        vertical_space_top = HEIGHT * 0.1  
+        vertical_space_bottom = HEIGHT * 0.1  
+        vertical_space_between = HEIGHT * 0.05  
 
         total_height_available = HEIGHT - vertical_space_top - vertical_space_bottom - vertical_space_between * 2  # 总可用高度
 
-        # 假设的大小比例，可以根据需求调整
+        # Assumed size ratios, adjust as needed
         face_height_ratio = 0.3
         keys_height_ratio = 0.5
         words_height_ratio = 0.2
@@ -228,7 +234,7 @@ class StatusWindow3(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setBrush(QColor(0, 0, 0))  # 黑色背景
+        painter.setBrush(QColor(0, 0, 0))  # Set background color to black
         painter.drawRect(self.rect())
 
     def showEvent(self, event):
@@ -239,9 +245,9 @@ class StatusWindow4(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(0, 0, WIDTH, HEIGHT)
-        self.setWindowTitle('状态 4')
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 透明背景
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
+        self.setWindowTitle('Status 4')
+        self.setAttribute(Qt.WA_TranslucentBackground)  # transparent background
+        self.setWindowFlags(Qt.FramelessWindowHint)  # no outline
         self.initUI()
         self.startAnimation()
 
@@ -253,7 +259,6 @@ class StatusWindow4(QWidget):
         self.view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.view.setStyleSheet("background: transparent;")
 
-        # 加载 SVG 文件
         self.face_svg = self.createSvgItem('shared/resources/pics/status4/face_4.svg')
         self.load_ring_svg = self.createSvgItem('shared/resources/pics/status4/load_ring.svg')
         self.world_svg = self.createSvgItem('shared/resources/pics/status4/words_4.svg')
@@ -266,9 +271,9 @@ class StatusWindow4(QWidget):
         return svg_item
 
     def positionSvgWidgets(self):
-        vertical_space_top = HEIGHT * 0.1  # 顶部空间
-        vertical_space_bottom = HEIGHT * 0.1  # 底部空间
-        vertical_space_between = HEIGHT * 0.05  # 两个SVG之间的空间
+        vertical_space_top = HEIGHT * 0.1  
+        vertical_space_bottom = HEIGHT * 0.1  
+        vertical_space_between = HEIGHT * 0.05  
 
         total_height_available = HEIGHT - vertical_space_top - vertical_space_bottom - vertical_space_between * 2  # 总可用高度
 
@@ -285,48 +290,39 @@ class StatusWindow4(QWidget):
         scale_factor = target_height / original_size.height()
         new_width = original_size.width() * scale_factor
 
-        # 计算新的x位置以便居中显示
         new_x = (WIDTH - new_width) / 2
 
-        # 应用缩放
         svg_item.setScale(scale_factor)
-        # 设置位置
         svg_item.setPos(new_x, top_margin)
 
 
     def startAnimation(self):
-        # 初始化旋转角度
         self.rotation_angle = 0
-        # 设置load_ring的旋转动画
         self.animation_timer = QTimer(self)
         self.animation_timer.timeout.connect(self.rotateLoadRing)
-        self.animation_timer.start(10)  # 更新间隔为10毫秒，以实现平滑动画
+        self.animation_timer.start(10) 
 
     def rotateLoadRing(self):
-        # 更新旋转角度
         self.rotation_angle = (self.rotation_angle + 1) % 360
 
-        # 获取加载环的原始边界矩形（考虑缩放）
         originalRect = self.load_ring_svg.renderer().defaultSize()
-        scale_factor = self.load_ring_svg.scale()  # 获取当前应用的缩放因子
+        scale_factor = self.load_ring_svg.scale() 
         scaledWidth = originalRect.width() * scale_factor
         scaledHeight = originalRect.height() * scale_factor
 
-        # 计算缩放后的中心点
         centerX = scaledWidth / 2
         centerY = scaledHeight / 2
 
-        # 由于QGraphicsSvgItem原点在左上角，需要先移动原点到图形中心，旋转后再移回
         transform = QTransform()
-        transform.translate(centerX, centerY)  # 平移到中心
-        transform.rotate(self.rotation_angle)  # 旋转
-        transform.translate(-centerX, -centerY)  # 平移回原点
+        transform.translate(centerX, centerY)  
+        transform.rotate(self.rotation_angle)  
+        transform.translate(-centerX, -centerY)  
 
         self.load_ring_svg.setTransform(transform)
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setBrush(QColor(0, 0, 0))  # 黑色背景
+        painter.setBrush(QColor(0, 0, 0))  # Set background color to black
         painter.drawRect(self.rect())
 
     def showEvent(self, event):
@@ -338,26 +334,26 @@ class StatusWindow5(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(0, 0, WIDTH, HEIGHT)
-        self.setWindowTitle('状态 5')
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 透明背景
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
+        self.setWindowTitle('Status 5')
+        self.setAttribute(Qt.WA_TranslucentBackground)  # transparent background
+        self.setWindowFlags(Qt.FramelessWindowHint)  # no outline
         self.initUI()
 
     def initUI(self):
-        # 加载SVG文件，确保路径正确
+        # Load SVG files, ensure paths are correct
         self.face_svg = QSvgWidget('shared/resources/pics/status5/face_5.svg', self)
         self.keys_svg = QSvgWidget('shared/resources/pics/status5/keys_5.svg', self)
         self.words_svg = QSvgWidget('shared/resources/pics/status5/words_5.svg', self)
         self.positionSvgWidgets()
 
     def positionSvgWidgets(self):
-        vertical_space_top = HEIGHT * 0.1  # 顶部空间
-        vertical_space_bottom = HEIGHT * 0.1  # 底部空间
-        vertical_space_between = HEIGHT * 0.05  # 两个SVG之间的空间
+        vertical_space_top = HEIGHT * 0.1  
+        vertical_space_bottom = HEIGHT * 0.1  
+        vertical_space_between = HEIGHT * 0.05  
 
-        total_height_available = HEIGHT - vertical_space_top - vertical_space_bottom - vertical_space_between * 2  # 总可用高度
+        total_height_available = HEIGHT - vertical_space_top - vertical_space_bottom - vertical_space_between * 2  
 
-        # 假设的大小比例，可以根据需求调整
+        # Assumed size ratios, adjust as needed
         face_height_ratio = 0.4
         keys_height_ratio = 0.5
         words_height_ratio = 0.1
@@ -379,7 +375,7 @@ class StatusWindow5(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setBrush(QColor(0, 0, 0))  # 黑色背景
+        painter.setBrush(QColor(0, 0, 0))  # Set background color to black
         painter.drawRect(self.rect())
 
     def showEvent(self, event):
@@ -390,26 +386,26 @@ class StatusWindow6(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(0, 0, WIDTH, HEIGHT)
-        self.setWindowTitle('状态 5')
-        self.setAttribute(Qt.WA_TranslucentBackground)  # 透明背景
-        self.setWindowFlags(Qt.FramelessWindowHint)  # 无边框
+        self.setWindowTitle('Status 6')
+        self.setAttribute(Qt.WA_TranslucentBackground)  # transparent background
+        self.setWindowFlags(Qt.FramelessWindowHint)  # no outline
         self.initUI()
 
     def initUI(self):
-        # 加载SVG文件，确保路径正确
+        # Load SVG files, ensure paths are correct
         self.face_svg = QSvgWidget('shared/resources/pics/status6/face_6.svg', self)
         self.keys_svg = QSvgWidget('shared/resources/pics/status6/keys_6.svg', self)
         self.words_svg = QSvgWidget('shared/resources/pics/status6/words_6.svg', self)
         self.positionSvgWidgets()
 
     def positionSvgWidgets(self):
-        vertical_space_top = HEIGHT * 0.1  # 顶部空间
-        vertical_space_bottom = HEIGHT * 0.1  # 底部空间
-        vertical_space_between = HEIGHT * 0.05  # 两个SVG之间的空间
+        vertical_space_top = HEIGHT * 0.1  
+        vertical_space_bottom = HEIGHT * 0.1  
+        vertical_space_between = HEIGHT * 0.05  
 
         total_height_available = HEIGHT - vertical_space_top - vertical_space_bottom - vertical_space_between * 2  # 总可用高度
 
-        # 假设的大小比例，可以根据需求调整
+        # Assumed size ratios, adjust as needed
         face_height_ratio = 0.5
         keys_height_ratio = 0.3
         words_height_ratio = 0.2
@@ -431,7 +427,7 @@ class StatusWindow6(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setBrush(QColor(0, 0, 0))  # 黑色背景
+        painter.setBrush(QColor(0, 0, 0))  # Set background color to black
         painter.drawRect(self.rect())
 
     def showEvent(self, event):
@@ -448,7 +444,6 @@ class StatusManager:
             4: StatusWindow4,
             5: StatusWindow5,
             6: StatusWindow6,
-            # 为其他状态添加窗口类...
         }
         self.current_window = None
         self.changeStatus(initial_status)
@@ -466,7 +461,7 @@ class TestThread(QThread):
     def run(self):
         while True:
             try:
-                new_status = int(input("请输入status的值 (0-6): "))
+                new_status = int(input("please input status index (0-6): "))
                 if 0 <= new_status <= 6:
                     self.status_changed.emit(new_status)
             except ValueError:
@@ -475,7 +470,7 @@ class TestThread(QThread):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    manager = StatusManager(0)  # 初始化状态管理器，状态设置为0
+    manager = StatusManager(0)  # initialize status manager, set index to 0
 
     def on_status_changed(status):
         manager.changeStatus(status)

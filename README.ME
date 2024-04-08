@@ -1,0 +1,9 @@
+Before Use:
+    normaly, if you need to change the parameter of the program, only need to adjust the config.py
+    make sure to install packages or set up a virtual enviorment according to requirements.txt
+    due to the complexity to upload big file into github, if you want to generate melodis directly without training one yourself, you should following the step below:
+        1.download the check point through the link below:
+            https://drive.google.com/file/d/1v3GVClKDoLs4aSeJGOvs4v2jrSA1l2lS/view?usp=sharing
+        2.put the ckpt_pretrained.pt into the folder shared/ckpt, there should be a file named here-should-have-ckpts.
+    the generator part is designed to interact with Yamaha Disklavier piano, if you use another deivce, you may need to adjust it based on your deivce
+    if you want to train the model yourself, feel free to adjust the parameter realated in config.py, but rember to adjust the PROJECT_NAME and ENTITY_NAME to your own wandb project, or if you don't want to use it, jus delete every line realated to waandb in model_train.py

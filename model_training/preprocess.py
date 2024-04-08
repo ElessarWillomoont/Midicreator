@@ -1,14 +1,19 @@
 import json
-import os
 from pathlib import Path
 from torch.utils.data import Dataset, DataLoader
 import torch
 from tqdm.auto import tqdm
+import sys
+import os
+script_path = os.path.abspath(__file__)
+parent_directory = os.path.dirname(os.path.dirname(script_path))
+sys.path.append(parent_directory)
+import shared.config as configue
 
-MAX_LENGTH = 32  # Maximum sequence length
-FILE_SIZE = 500 * 1024 * 1024  # 500MB in bytes
-BATCH_SIZE = 32
-PAD_ID = 0  # Assuming 0 is the ID for PAD token
+MAX_LENGTH = configue.MAX_LENGTH  # Maximum sequence length
+FILE_SIZE = configue.FILE_SIZE  # 500MB in bytes
+BATCH_SIZE = configue.context_length
+PAD_ID = configue.PAD_ID  # Assuming 0 is the ID for PAD token
 
 class MusicDataset(Dataset):
     def __init__(self, directory):

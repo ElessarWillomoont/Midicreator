@@ -1,4 +1,3 @@
-import os
 import torch
 from torch.optim import Adam
 from torch.utils.data import DataLoader
@@ -7,22 +6,28 @@ from preprocess import MusicDataset, custom_collate_fn
 import wandb
 from tqdm import tqdm
 from torch.optim.lr_scheduler import ReduceLROnPlateau
+import sys
+import os
+script_path = os.path.abspath(__file__)
+parent_directory = os.path.dirname(os.path.dirname(script_path))
+sys.path.append(parent_directory)
+import shared.config as configue
 
 # Configuration
-PROJECT_NAME = 'Midicreator_Hugging_face_NO_BPE_smalldata'
-ENTITY_NAME = 'candle2587_team'
-EPOCH_NUM = 4000
-STEP_SIZE = 1000
-BATCH_SIZE = 512
-MAX_LENGTH = 32
-PAD_ID = 0
-CHECK_POINT = 'NO'  # Specify your checkpoint path
+PROJECT_NAME = configue.PROJECT_NAME
+ENTITY_NAME = configue.ENTITY_NAME
+EPOCH_NUM = configue.EPOCH_NUM
+STEP_SIZE = configue.STEP_SIZE
+BATCH_SIZE = configue.BATCH_SIZE
+MAX_LENGTH = configue.MAX_LENGTH
+PAD_ID = configue.PAD_ID
+CHECK_POINT = configue.CHECK_POINT_CONTINUE
 
 # Setup device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Initialize model
-model = DecoderOnlyTransformer(vocab_size=465, decoder_layer=6, n_head=4, n_emb=768, context_length=MAX_LENGTH, pad_token_id=PAD_ID)
+model = DecoderOnlyTransformer(vocab_size=configue.vocab_size, decoder_layer=configue.decoder_layer, n_head=configue.n_head, n_emb=configue.n_emb, context_length=MAX_LENGTH, pad_token_id=PAD_ID)
 optimizer = Adam(model.parameters(), lr=0.005)
 model.to(device)
 

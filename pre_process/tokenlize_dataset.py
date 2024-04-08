@@ -1,7 +1,6 @@
 from miditoolkit import MidiFile
 from miditok import REMI
 from pathlib import Path
-import json
 
 def load_midi(midi_path):
     """Load a MIDI file."""

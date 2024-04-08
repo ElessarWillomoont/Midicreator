@@ -1,13 +1,18 @@
 import torch
 from shared.models import DecoderOnlyTransformer
 import torch.nn.functional as F
-
-CHECK_POINT = "model_output/archive/ckpt_loss_not_change.pt"
-MAX_LENGTH = 32
-PAD_ID = 0
+import sys
+import os
+script_path = os.path.abspath(__file__)
+parent_directory = os.path.dirname(os.path.dirname(script_path))
+sys.path.append(parent_directory)
+import shared.config as configue
+CHECK_POINT = configue.CHECK_POINT_CONTINUE
+MAX_LENGTH = configue.MAX_LENGTH
+PAD_ID = configue.PAD_ID
 
 # Load the model and checkpoint
-model = DecoderOnlyTransformer(vocab_size=465, decoder_layer=6, n_head=4, n_emb=768, context_length=MAX_LENGTH, pad_token_id=PAD_ID)
+model = DecoderOnlyTransformer(vocab_size=configue.vocab_size, decoder_layer=configue.decoder_layer, n_head=configue.n_head, n_emb=configue.n_emb, context_length=MAX_LENGTH, pad_token_id=PAD_ID)
 checkpoint = torch.load(CHECK_POINT)
 model.load_state_dict(checkpoint)
 model.eval()
