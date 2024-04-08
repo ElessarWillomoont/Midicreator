@@ -19,7 +19,7 @@ due to the complexity to upload big file into github, if you want to generate me
     
 The generator part is designed to interact with Yamaha Disklavier piano, if you use another deivce, you may need to adjust it based on your deivce
 
-If you want to train the model yourself, feel free to adjust the parameter realated in config.py, but rember to adjust the PROJECT_NAME and ENTITY_NAME to your own wandb project, or if you don't want to use it, jus delete every line realated to waandb in model_train.py
+If you want to train the model yourself, feel free to adjust the parameter realated in config.py, but rember to adjust the PROJECT_NAME and ENTITY_NAME to your own wandb project, or if you don't want to use it, jus delete every line realated to wandb in model_train.py
 
 ## How to Use:
 
@@ -44,4 +44,11 @@ Then, run the model_training/model_training.py. the training process will begin.
 feel free to adjust other prameters in shared/configure.py to fit your training device.
 
 If you want just directly generate melodies, simply plug in the piano, and run the program_generating/generator.py
+If the GUI doesn't work, adjust the following part in configure.py to suit the screen resouloution:
+
+    # UI window dimensions
+    WIDTH = 2880  # Window width of the monitor
+    HEIGHT = 1680  # Window height of the monitor
+
+Wish you a plesant journey!
     
