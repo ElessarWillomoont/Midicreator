@@ -10,6 +10,7 @@ normaly, if you need to change the parameter of the program, only need to adjust
 make sure to install packages or set up a virtual enviorment according to requirements.txt
 
 due to the complexity to upload big file into github, if you want to generate melodis directly without training one yourself, you should following the step below:
+
 download the check point through the link below:
     
         https://drive.google.com/file/d/1v3GVClKDoLs4aSeJGOvs4v2jrSA1l2lS/view?usp=sharing
