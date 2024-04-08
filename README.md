@@ -10,11 +10,11 @@ normaly, if you need to change the parameter of the program, only need to adjust
 make sure to install packages or set up a virtual enviorment according to requirements.txt
 
 due to the complexity to upload big file into github, if you want to generate melodis directly without training one yourself, you should following the step below:
-1.download the check point through the link below:
+download the check point through the link below:
     
         https://drive.google.com/file/d/1v3GVClKDoLs4aSeJGOvs4v2jrSA1l2lS/view?usp=sharing
         
-2.put the ckpt_pretrained.pt into the folder shared/ckpt, there should be a file named here-should-have-ckpts.
+put the ckpt_pretrained.pt into the folder shared/ckpt, there should be a file named here-should-have-ckpts.
     
 The generator part is designed to interact with Yamaha Disklavier piano, if you use another deivce, you may need to adjust it based on your deivce
 
